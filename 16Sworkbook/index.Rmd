@@ -22,21 +22,21 @@ Time | Topic
 :-------| :----------------------------------
 09:00  | Welcome, Housekeeping, and Introductions
 09:10  | 1. Pre-workshop
-09:20  | Presentation of basic concepts
-09:40  | 2. Introduction
-10:00  | 3. Removing primers
+09:30  | Presentation of basic concepts
+10:00  | 2. Introduction
 10:15  | Break
-10:30  | 3. Removing primers (cont)
-10:45  | 4. Filter
+10:30  | 3. Removing primers
 11:30  | Lunch break
-12:00  | 5. Denoise
+12:00  | 4. Filter
 13:00  | Finish
 
 ### Day 2 {-}
 
 Time | Topic                                         
 :-------| :----------------------------------
-09:00  | 6. Assign Taxonomy
+09:00  | 5. Denoise
+09:30  | 6. Assign Taxonomy
+09:45  | 7. Phyloseq - Preprocessing
 10:15  | Break
 10:30  | Session
 11:30  | Lunch break
@@ -59,3 +59,4 @@ Time | Topic
 
 - Project dataset: [link](https://www.dropbox.com/s/glw1aig4jsyxuem/raw_data.zip?dl=0)
 - DADA2 paper: [link](https://www.nature.com/articles/nmeth.3869#methods)
+

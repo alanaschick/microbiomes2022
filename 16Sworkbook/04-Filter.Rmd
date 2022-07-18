@@ -2,6 +2,7 @@
 library(dada2)
 library(tidyverse)
 library(phyloseq)
+library(colorRamps)
 
 
 path <- "~/Desktop/microbiomeworkshop2022/rawdata"
@@ -27,7 +28,7 @@ plotQualityProfile(ftrim[1:2])
 
 In gray-scale is a heat map of the frequency of each quality score at each base position. The mean quality score at each position is shown by the green line, and the quartiles of the quality score distribution by the orange lines. The red line shows the scaled proportion of reads that extend to at least that position (this is more useful for other sequencing technologies, as Illumina reads are typically all the same length, hence the flat red line).
 
-The forward reads are good quality. We generally advise trimming the last few nucleotides to avoid less well-controlled errors that can arise there. These quality profiles do not suggest that any additional trimming is needed. We will truncate the forward reads at position 240 (trimming the last 10 nucleotides).
+The forward reads are good quality. We generally advise trimming the last few nucleotides to avoid less well-controlled errors that can arise there.
 
 Now we visualize the quality profile of the reverse reads:
 
@@ -35,7 +36,7 @@ Now we visualize the quality profile of the reverse reads:
 plotQualityProfile(rtrim[1:2])
 ```
 
-The reverse reads are of significantly worse quality, especially at the end, which is common in Illumina sequencing. This isn’t too worrisome, as DADA2 incorporates quality information into its error model which makes the algorithm robust to lower quality sequence, but trimming as the average qualities crash will improve the algorithm’s sensitivity to rare sequence variants. Based on these profiles, we will truncate the reverse reads at position 160 where the quality distribution crashes.
+The reverse reads are of significantly worse quality, especially at the end, which is common in Illumina sequencing. This isn’t too worrisome, as DADA2 incorporates quality information into its error model which makes the algorithm robust to lower quality sequence, but trimming as the average qualities crash will improve the algorithm’s sensitivity to rare sequence variants. Based on these profiles, we will truncate the reverse reads at a position where the quality distribution crashes.
 
 **IMPORTANT** Your reads must still overlap after truncation in order to merge them later!
 
@@ -61,7 +62,7 @@ We’ll use standard filtering parameters: `maxN=0` (DADA2 requires no Ns), `tru
 ```{r}
 
 out <- filterAndTrim(ftrim, ffilt, rtrim, rfilt, 
-                     truncLen=c(260,220),
+                     truncLen=c(280,260),
                      maxN=0, 
                      maxEE=c(2,2), 
                      truncQ=2, 
@@ -90,3 +91,71 @@ Remember though, when choosing truncLen for paired-end reads you must maintain o
 
 Determine what you think the optimal filtering parameters should be for this dataset. 
 
+## Exploring parameters
+
+```{r, echo = FALSE}
+
+## Explore truncation parameters
+results <- NULL
+
+for (i in seq(from = 300-45, to = 300, by = 5)){
+  for (j in seq(from = 300-90, to = 300, by = 10)){
+  	truncparam <- c()
+    out <- filterAndTrim(ftrim[1:4],
+                         ffilt[1:4],
+                         rtrim[1:4],
+                         rfilt[1:4], 
+                         truncLen=c(i,j),
+                         maxEE=c(2,5), rm.phix=TRUE,
+                         compress=TRUE, multithread=TRUE,
+                         matchIDs=TRUE)
+    res <- data.frame(Sample = rownames(out), perc = out[,2]/out[,1], for_trunc = i, rev_trunc = j)
+    results <- rbind(results, res)
+  }
+}
+
+results <- results %>% separate(Sample, c("Name", "Sample"), sep = "_S")
+
+gg <- ggplot(results, aes(x = for_trunc, y = perc, colour = as.factor(rev_trunc))) +
+  geom_point(size = 2) +
+  geom_line(size = 1) +
+  scale_colour_manual(values = sample(primary.colors(20), 10), name = "Truncate Reverse") +
+  xlab("Truncate Forward") +
+  ylab("Percentage reads passed filtering") +
+  ggtitle("Truncation parameters") +
+  theme_minimal() +
+  facet_wrap(~Name)
+gg
+
+## Explore expected errors
+results <- NULL
+for (i in 1:5){
+	for (j in 1:5){
+		out <- filterAndTrim(ftrim[1:4],
+                         ffilt[1:4],
+                         rtrim[1:4],
+                         rfilt[1:4],
+		                     truncLen=c(280,260),
+		                     maxEE=c(i,j), rm.phix=TRUE,
+		                     compress=TRUE, multithread=TRUE, 
+		                     matchIDs=TRUE)
+		res <- data.frame(Sample = rownames(out), perc = out[,2]/out[,1], for_error = i, rev_error = j)
+ 		results <- rbind(results, res)
+
+	}
+}
+
+results <- results %>% separate(Sample, c("Name", "Sample"), sep = "_S")
+
+gg <- ggplot(results, aes(x = for_error, y = perc, colour = as.factor(rev_error))) +
+	geom_point(size = 2) +
+	geom_line(size = 1) +
+	scale_colour_manual(values = rainbow(5, v = 0.8), name = "Error Rate Reverse") +
+	xlab("Error Rate Forward") +
+	ylab("Percentage reads passed filtering") +
+	ggtitle("Expected error parameters") +
+	theme_minimal() +
+	facet_wrap(~Name)
+gg
+
+```
