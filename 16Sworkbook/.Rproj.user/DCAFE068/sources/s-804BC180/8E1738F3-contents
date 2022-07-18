@@ -1,0 +1,181 @@
+---
+title: "16s Microbiome Analysis Workshop"
+author: "Alana Schick"
+date: "`r Sys.Date()`"
+site: bookdown::bookdown_site
+documentclass: book
+link-citations: yes
+description: This workbook contains workshop material for all three days.
+---
+
+# Welcome {-}
+
+Placeholder
+
+
+## Workshop Schedule {-}
+### Day 1 {-}
+### Day 2 {-}
+### Day 3 {-}
+## Important links {-}
+
+<!--chapter:end:index.Rmd-->
+
+# (PART) Day 1 {-}
+
+# Pre-workshop
+
+For simplicity, we will carry out this analysis from start to finish in R. Please ensure you have the latest version of R and RStudio. 
+  
+## Packages
+
+Please install the following  R packages:
+  
+* dada2
+* tidyverse
+* phyloseq
+* ShortRead
+* Biostrings
+
+Confirm that these are installed by loading them in R using `library(packagename)`.
+
+## Data download
+
+The data to use for the workshop can be downloaded from [here](https://www.dropbox.com/s/glw1aig4jsyxuem/raw_data.zip?dl=0).
+
+
+
+
+<!--chapter:end:01-Preworkshop.Rmd-->
+
+
+# Introduction
+
+Placeholder
+
+
+## Basics and Background
+## Data
+### Exercise
+
+<!--chapter:end:02-Introduction.Rmd-->
+
+```{r setup, include=FALSE} 
+library(dada2)
+library(tidyverse)
+library(phyloseq)
+library(Biostrings)
+library(ShortRead)
+```
+
+# Removing Primers
+
+The first step that everyone performs before doing an analysis is data cleaning. Data cleaning can mean multiple things in this context: primer removal, quality trimming, removing very short sequences etc. Remember inconsistent and incorrect data leads to false conclusions. In short, garbage in, garbage out applies to all data.
+
+There are multiple ways in which you can remove primers sequences from your fastq files. 
+[CutAdapt](https://cutadapt.readthedocs.io/en/stable/index.html)  and [trimmomatic](http://www.usadellab.org/cms/?page=trimmomatic) are two widely used tools for short-read data. The `dada2` package has its own removePrimers sequence function which is recommended for PacBio data.
+
+## Identify Primers
+
+Set path to your folder contaning the sequences
+
+```{r}
+## CHANGE ME to the directory containing the fastq files after unzipping
+path <- "~/Desktop/microbiomeworkshop2022/rawdata"
+list.files(path)
+```
+
+First, we read in the names of the fastq files, and perform some string manipulation. We need to generate matched lists of the forward and reverse read files, as well as parsing out the sample name. Here we assume forward and reverse read files are in the format `SAMPLENAME_R1_001.fastq.gz` and `SAMPLENAME_R2_001.fastq.gz`, respectively, so string parsing may have to be altered in your own data if your filenames have a different format.
+
+```{r}
+fs <- sort(list.files(path, pattern = "_R1_001.fastq.gz", full.names = TRUE))
+rs <- sort(list.files(path, pattern = "_R2_001.fastq.gz", full.names = TRUE))
+sample.names <- sapply(strsplit(fs, "_R"), `[`, 1)
+sample.names
+```
+
+V3-V4 primers were used to amplify this dataset. 
+
+```{r}
+## Set primer/adapter sequences
+FWD <- "CCTACGGGNGGCWGCAG"
+REV <- "GACTACHVGGGTATCTAATCC"
+```
+
+In theory if you understand your amplicon sequencing setup, this is sufficient to continue. However, to ensure we have the right primers, and the correct orientation of the primers on the reads, we will verify the presence and orientation of these primers in the data.
+
+```{r}
+allOrients <- function(primer) {
+    # Create all orientations of the input sequence
+    require(Biostrings)
+    dna <- DNAString(primer)  # The Biostrings works w/ DNAString objects rather than character vectors
+    orients <- c(Forward = dna, Complement = complement(dna), Reverse = reverse(dna), 
+        RevComp = reverseComplement(dna))
+    return(sapply(orients, toString))  # Convert back to character vector
+}
+FWD.orients <- allOrients(FWD)
+REV.orients <- allOrients(REV)
+FWD.orients
+```
+
+We are now ready to count the number of times the primers appear in the forward and reverse read, while considering all possible primer orientations. Identifying and counting the primers on one set of paired end FASTQ files is sufficient, assuming all the files were created using the same library preparation, so we’ll just process the first sample.
+
+```{r}
+primerHits <- function(primer, fn) {
+    # Counts number of reads in which the primer is found
+    nhits <- vcountPattern(primer, sread(readFastq(fn)), fixed = FALSE)
+    return(sum(nhits > 0))
+}
+rbind(FWD.ForwardReads = sapply(FWD.orients, primerHits, fn = fs[[1]]), 
+    FWD.ReverseReads = sapply(FWD.orients, primerHits, fn = rs[[1]]), 
+    REV.ForwardReads = sapply(REV.orients, primerHits, fn = fs[[1]]), 
+    REV.ReverseReads = sapply(REV.orients, primerHits, fn = rs[[1]]))
+
+```
+
+As expected, the FWD primer is found in the forward reads in its forward orientation, and in some of the reverse reads in its reverse-complement orientation (due to read-through when the 16S region is short). Similarly the REV primer is found with its expected orientations.
+
+Note: Orientation mixups are a common trip-up. If, for example, the REV primer is matching the Reverse reads in its RevComp orientation, then replace REV with its reverse-complement orientation (REV <- REV.orient[["RevComp"]]) before proceeding.
+
+## Remove Primers
+
+These primers can not be removed. We will do this using the function `removePrimers` in the `dada2` package.
+
+First we assign filenames to the reads with the primers removed.
+
+```{r}
+
+ftrim <- file.path(path, "trimmed", paste0(basename(sample.names), "_F_trimmed.fastq.gz"))
+rtrim <- file.path(path, "trimmed", paste0(basename(sample.names), "_R_trimmed.fastq.gz"))
+names(ftrim) <- sample.names
+names(rtrim) <- sample.names
+
+removePrimers(fs, ftrim, primer.fwd = FWD, orient = TRUE, verbose = TRUE)
+removePrimers(rs, rtrim, primer.rev = REV, orient = TRUE, verbose = TRUE)
+```
+
+As a sanity check, we will count the presence of the primers in the first cut sample:
+
+```{r}
+rbind(FWD.ForwardReads = sapply(FWD.orients, primerHits, fn = fnFs.cut[[1]]), 
+    FWD.ReverseReads = sapply(FWD.orients, primerHits, fn = fnRs.cut[[1]]), 
+    REV.ForwardReads = sapply(REV.orients, primerHits, fn = fnFs.cut[[1]]), 
+    REV.ReverseReads = sapply(REV.orients, primerHits, fn = fnRs.cut[[1]]))
+```
+
+Success!
+
+
+
+
+<!--chapter:end:03-RemovingPrimers.Rmd-->
+
+# Filter
+
+
+
+
+
+
+<!--chapter:end:04-Dada2.Rmd-->
+

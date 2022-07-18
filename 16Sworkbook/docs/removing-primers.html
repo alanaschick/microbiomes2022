@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>3 Removing Primers | 16s Microbiome Analysis Workshop</title>
+  <meta name="description" content="This workbook contains workshop material for all three days." />
+  <meta name="generator" content="bookdown 0.27 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="3 Removing Primers | 16s Microbiome Analysis Workshop" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="This workbook contains workshop material for all three days." />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="3 Removing Primers | 16s Microbiome Analysis Workshop" />
+  
+  <meta name="twitter:description" content="This workbook contains workshop material for all three days." />
+  
+
+<meta name="author" content="Alana Schick" />
+
+
+<meta name="date" content="2022-07-17" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="introduction.html"/>
+<link rel="next" href="filter.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">16S Analysis Workshop</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Welcome</a>
+<ul>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#workshop-schedule"><i class="fa fa-check"></i>Workshop Schedule</a>
+<ul>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#day-1"><i class="fa fa-check"></i>Day 1</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#day-2"><i class="fa fa-check"></i>Day 2</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#day-3"><i class="fa fa-check"></i>Day 3</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#important-links"><i class="fa fa-check"></i>Important links</a></li>
+</ul></li>
+<li class="part"><span><b>I Day 1</b></span></li>
+<li class="chapter" data-level="1" data-path="pre-workshop.html"><a href="pre-workshop.html"><i class="fa fa-check"></i><b>1</b> Pre-workshop</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="pre-workshop.html"><a href="pre-workshop.html#packages"><i class="fa fa-check"></i><b>1.1</b> Packages</a></li>
+<li class="chapter" data-level="1.2" data-path="pre-workshop.html"><a href="pre-workshop.html#data-download"><i class="fa fa-check"></i><b>1.2</b> Data download</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><b>2</b> Introduction</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="introduction.html"><a href="introduction.html#basics-and-background"><i class="fa fa-check"></i><b>2.1</b> Basics and Background</a></li>
+<li class="chapter" data-level="2.2" data-path="introduction.html"><a href="introduction.html#data"><i class="fa fa-check"></i><b>2.2</b> Data</a>
+<ul>
+<li class="chapter" data-level="2.2.1" data-path="introduction.html"><a href="introduction.html#exercise"><i class="fa fa-check"></i><b>2.2.1</b> Exercise</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="removing-primers.html"><a href="removing-primers.html"><i class="fa fa-check"></i><b>3</b> Removing Primers</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="removing-primers.html"><a href="removing-primers.html#identify-primers"><i class="fa fa-check"></i><b>3.1</b> Identify Primers</a></li>
+<li class="chapter" data-level="3.2" data-path="removing-primers.html"><a href="removing-primers.html#remove-primers"><i class="fa fa-check"></i><b>3.2</b> Remove Primers</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="filter.html"><a href="filter.html"><i class="fa fa-check"></i><b>4</b> Filter</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="filter.html"><a href="filter.html#inspect"><i class="fa fa-check"></i><b>4.1</b> Inspect</a>
+<ul>
+<li class="chapter" data-level="4.1.1" data-path="filter.html"><a href="filter.html#exercise-1"><i class="fa fa-check"></i><b>4.1.1</b> Exercise</a></li>
+</ul></li>
+<li class="chapter" data-level="4.2" data-path="filter.html"><a href="filter.html#filter-and-trim"><i class="fa fa-check"></i><b>4.2</b> Filter and Trim</a>
+<ul>
+<li class="chapter" data-level="4.2.1" data-path="filter.html"><a href="filter.html#exercise-2"><i class="fa fa-check"></i><b>4.2.1</b> Exercise</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="denoise.html"><a href="denoise.html"><i class="fa fa-check"></i><b>5</b> Denoise</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">16s Microbiome Analysis Workshop</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="removing-primers" class="section level1 hasAnchor" number="3">
+<h1><span class="header-section-number">3</span> Removing Primers<a href="removing-primers.html#removing-primers" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>The first step that everyone performs before doing an analysis is data cleaning. Data cleaning can mean multiple things in this context: primer removal, quality trimming, removing very short sequences etc. Remember inconsistent and incorrect data leads to false conclusions. In short, garbage in, garbage out applies to all data.</p>
+<p>There are multiple ways in which you can remove primers sequences from your fastq files.
+<a href="https://cutadapt.readthedocs.io/en/stable/index.html">CutAdapt</a> and <a href="http://www.usadellab.org/cms/?page=trimmomatic">trimmomatic</a> are two widely used tools for short-read data. The <code>dada2</code> package has its own removePrimers sequence function which is recommended for PacBio data.</p>
+<div id="identify-primers" class="section level2 hasAnchor" number="3.1">
+<h2><span class="header-section-number">3.1</span> Identify Primers<a href="removing-primers.html#identify-primers" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Set path to your folder contaning the sequences</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="removing-primers.html#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="do">## CHANGE ME to the directory containing the fastq files after unzipping</span></span>
+<span id="cb1-2"><a href="removing-primers.html#cb1-2" aria-hidden="true" tabindex="-1"></a>path <span class="ot">&lt;-</span> <span class="st">&quot;~/Desktop/microbiomeworkshop2022/rawdata&quot;</span></span>
+<span id="cb1-3"><a href="removing-primers.html#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">list.files</span>(path)</span></code></pre></div>
+<pre><code>##  [1] &quot;01MP-1_S1_L001_R1_001.fastq.gz&quot;  &quot;01MP-1_S1_L001_R2_001.fastq.gz&quot; 
+##  [3] &quot;01MP-2_S2_L001_R1_001.fastq.gz&quot;  &quot;01MP-2_S2_L001_R2_001.fastq.gz&quot; 
+##  [5] &quot;01MP-3_S3_L001_R1_001.fastq.gz&quot;  &quot;01MP-3_S3_L001_R2_001.fastq.gz&quot; 
+##  [7] &quot;03KW-1_S4_L001_R1_001.fastq.gz&quot;  &quot;03KW-1_S4_L001_R2_001.fastq.gz&quot; 
+##  [9] &quot;03KW-2_S5_L001_R1_001.fastq.gz&quot;  &quot;03KW-2_S5_L001_R2_001.fastq.gz&quot; 
+## [11] &quot;03KW-3_S6_L001_R1_001.fastq.gz&quot;  &quot;03KW-3_S6_L001_R2_001.fastq.gz&quot; 
+## [13] &quot;04NI-1_S7_L001_R1_001.fastq.gz&quot;  &quot;04NI-1_S7_L001_R2_001.fastq.gz&quot; 
+## [15] &quot;04NI-2_S8_L001_R1_001.fastq.gz&quot;  &quot;04NI-2_S8_L001_R2_001.fastq.gz&quot; 
+## [17] &quot;04NI-3_S9_L001_R1_001.fastq.gz&quot;  &quot;04NI-3_S9_L001_R2_001.fastq.gz&quot; 
+## [19] &quot;05GS-1_S10_L001_R1_001.fastq.gz&quot; &quot;05GS-1_S10_L001_R2_001.fastq.gz&quot;
+## [21] &quot;05GS-2_S11_L001_R1_001.fastq.gz&quot; &quot;05GS-2_S11_L001_R2_001.fastq.gz&quot;
+## [23] &quot;05GS-3_S12_L001_R1_001.fastq.gz&quot; &quot;05GS-3_S12_L001_R2_001.fastq.gz&quot;
+## [25] &quot;06TK-1_S13_L001_R1_001.fastq.gz&quot; &quot;06TK-1_S13_L001_R2_001.fastq.gz&quot;
+## [27] &quot;06TK-2_S14_L001_R1_001.fastq.gz&quot; &quot;06TK-2_S14_L001_R2_001.fastq.gz&quot;
+## [29] &quot;06TK-3_S15_L001_R1_001.fastq.gz&quot; &quot;06TK-3_S15_L001_R2_001.fastq.gz&quot;
+## [31] &quot;07HZ-1_S16_L001_R1_001.fastq.gz&quot; &quot;07HZ-1_S16_L001_R2_001.fastq.gz&quot;
+## [33] &quot;07HZ-2_S17_L001_R1_001.fastq.gz&quot; &quot;07HZ-2_S17_L001_R2_001.fastq.gz&quot;
+## [35] &quot;07HZ-3_S18_L001_R1_001.fastq.gz&quot; &quot;07HZ-3_S18_L001_R2_001.fastq.gz&quot;
+## [37] &quot;08EB-1_S19_L001_R1_001.fastq.gz&quot; &quot;08EB-1_S19_L001_R2_001.fastq.gz&quot;
+## [39] &quot;08EB-2_S20_L001_R1_001.fastq.gz&quot; &quot;08EB-2_S20_L001_R2_001.fastq.gz&quot;
+## [41] &quot;08EB-3_S21_L001_R1_001.fastq.gz&quot; &quot;08EB-3_S21_L001_R2_001.fastq.gz&quot;
+## [43] &quot;09CR-1_S22_L001_R1_001.fastq.gz&quot; &quot;09CR-1_S22_L001_R2_001.fastq.gz&quot;
+## [45] &quot;09CR-2_S23_L001_R1_001.fastq.gz&quot; &quot;09CR-2_S23_L001_R2_001.fastq.gz&quot;
+## [47] &quot;09CR-3_S24_L001_R1_001.fastq.gz&quot; &quot;09CR-3_S24_L001_R2_001.fastq.gz&quot;
+## [49] &quot;trimmed&quot;</code></pre>
+<p>First, we read in the names of the fastq files, and perform some string manipulation. We need to generate matched lists of the forward and reverse read files, as well as parsing out the sample name. Here we assume forward and reverse read files are in the format <code>SAMPLENAME_R1_001.fastq.gz</code> and <code>SAMPLENAME_R2_001.fastq.gz</code>, respectively, so string parsing may have to be altered in your own data if your filenames have a different format.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="removing-primers.html#cb3-1" aria-hidden="true" tabindex="-1"></a>fs <span class="ot">&lt;-</span> <span class="fu">sort</span>(<span class="fu">list.files</span>(path, <span class="at">pattern =</span> <span class="st">&quot;_R1_001.fastq.gz&quot;</span>, <span class="at">full.names =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb3-2"><a href="removing-primers.html#cb3-2" aria-hidden="true" tabindex="-1"></a>rs <span class="ot">&lt;-</span> <span class="fu">sort</span>(<span class="fu">list.files</span>(path, <span class="at">pattern =</span> <span class="st">&quot;_R2_001.fastq.gz&quot;</span>, <span class="at">full.names =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb3-3"><a href="removing-primers.html#cb3-3" aria-hidden="true" tabindex="-1"></a>sample.names <span class="ot">&lt;-</span> <span class="fu">sapply</span>(<span class="fu">strsplit</span>(fs, <span class="st">&quot;_R&quot;</span>), <span class="st">`</span><span class="at">[</span><span class="st">`</span>, <span class="dv">1</span>)</span>
+<span id="cb3-4"><a href="removing-primers.html#cb3-4" aria-hidden="true" tabindex="-1"></a>sample.names</span></code></pre></div>
+<pre><code>##  [1] &quot;/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/01MP-1_S1_L001&quot; 
+##  [2] &quot;/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/01MP-2_S2_L001&quot; 
+##  [3] &quot;/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/01MP-3_S3_L001&quot; 
+##  [4] &quot;/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/03KW-1_S4_L001&quot; 
+##  [5] &quot;/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/03KW-2_S5_L001&quot; 
+##  [6] &quot;/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/03KW-3_S6_L001&quot; 
+##  [7] &quot;/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/04NI-1_S7_L001&quot; 
+##  [8] &quot;/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/04NI-2_S8_L001&quot; 
+##  [9] &quot;/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/04NI-3_S9_L001&quot; 
+## [10] &quot;/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/05GS-1_S10_L001&quot;
+## [11] &quot;/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/05GS-2_S11_L001&quot;
+## [12] &quot;/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/05GS-3_S12_L001&quot;
+## [13] &quot;/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/06TK-1_S13_L001&quot;
+## [14] &quot;/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/06TK-2_S14_L001&quot;
+## [15] &quot;/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/06TK-3_S15_L001&quot;
+## [16] &quot;/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/07HZ-1_S16_L001&quot;
+## [17] &quot;/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/07HZ-2_S17_L001&quot;
+## [18] &quot;/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/07HZ-3_S18_L001&quot;
+## [19] &quot;/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/08EB-1_S19_L001&quot;
+## [20] &quot;/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/08EB-2_S20_L001&quot;
+## [21] &quot;/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/08EB-3_S21_L001&quot;
+## [22] &quot;/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/09CR-1_S22_L001&quot;
+## [23] &quot;/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/09CR-2_S23_L001&quot;
+## [24] &quot;/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/09CR-3_S24_L001&quot;</code></pre>
+<p>V3-V4 primers were used to amplify this dataset.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="removing-primers.html#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Set primer/adapter sequences</span></span>
+<span id="cb5-2"><a href="removing-primers.html#cb5-2" aria-hidden="true" tabindex="-1"></a>FWD <span class="ot">&lt;-</span> <span class="st">&quot;CCTACGGGNGGCWGCAG&quot;</span></span>
+<span id="cb5-3"><a href="removing-primers.html#cb5-3" aria-hidden="true" tabindex="-1"></a>REV <span class="ot">&lt;-</span> <span class="st">&quot;GACTACHVGGGTATCTAATCC&quot;</span></span></code></pre></div>
+<p>In theory if you understand your amplicon sequencing setup, this is sufficient to continue. However, to ensure we have the right primers, and the correct orientation of the primers on the reads, we will verify the presence and orientation of these primers in the data.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="removing-primers.html#cb6-1" aria-hidden="true" tabindex="-1"></a>allOrients <span class="ot">&lt;-</span> <span class="cf">function</span>(primer) {</span>
+<span id="cb6-2"><a href="removing-primers.html#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Create all orientations of the input sequence</span></span>
+<span id="cb6-3"><a href="removing-primers.html#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">require</span>(Biostrings)</span>
+<span id="cb6-4"><a href="removing-primers.html#cb6-4" aria-hidden="true" tabindex="-1"></a>    dna <span class="ot">&lt;-</span> <span class="fu">DNAString</span>(primer)  <span class="co"># The Biostrings works w/ DNAString objects rather than character vectors</span></span>
+<span id="cb6-5"><a href="removing-primers.html#cb6-5" aria-hidden="true" tabindex="-1"></a>    orients <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">Forward =</span> dna, <span class="at">Complement =</span> <span class="fu">complement</span>(dna), <span class="at">Reverse =</span> <span class="fu">reverse</span>(dna), </span>
+<span id="cb6-6"><a href="removing-primers.html#cb6-6" aria-hidden="true" tabindex="-1"></a>        <span class="at">RevComp =</span> <span class="fu">reverseComplement</span>(dna))</span>
+<span id="cb6-7"><a href="removing-primers.html#cb6-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="fu">sapply</span>(orients, toString))  <span class="co"># Convert back to character vector</span></span>
+<span id="cb6-8"><a href="removing-primers.html#cb6-8" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb6-9"><a href="removing-primers.html#cb6-9" aria-hidden="true" tabindex="-1"></a>FWD.orients <span class="ot">&lt;-</span> <span class="fu">allOrients</span>(FWD)</span>
+<span id="cb6-10"><a href="removing-primers.html#cb6-10" aria-hidden="true" tabindex="-1"></a>REV.orients <span class="ot">&lt;-</span> <span class="fu">allOrients</span>(REV)</span>
+<span id="cb6-11"><a href="removing-primers.html#cb6-11" aria-hidden="true" tabindex="-1"></a>FWD.orients</span></code></pre></div>
+<pre><code>##             Forward          Complement             Reverse             RevComp 
+## &quot;CCTACGGGNGGCWGCAG&quot; &quot;GGATGCCCNCCGWCGTC&quot; &quot;GACGWCGGNGGGCATCC&quot; &quot;CTGCWGCCNCCCGTAGG&quot;</code></pre>
+<p>We are now ready to count the number of times the primers appear in the forward and reverse read, while considering all possible primer orientations. Identifying and counting the primers on one set of paired end FASTQ files is sufficient, assuming all the files were created using the same library preparation, so we’ll just process the first sample.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="removing-primers.html#cb8-1" aria-hidden="true" tabindex="-1"></a>primerHits <span class="ot">&lt;-</span> <span class="cf">function</span>(primer, fn) {</span>
+<span id="cb8-2"><a href="removing-primers.html#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Counts number of reads in which the primer is found</span></span>
+<span id="cb8-3"><a href="removing-primers.html#cb8-3" aria-hidden="true" tabindex="-1"></a>    nhits <span class="ot">&lt;-</span> <span class="fu">vcountPattern</span>(primer, <span class="fu">sread</span>(<span class="fu">readFastq</span>(fn)), <span class="at">fixed =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb8-4"><a href="removing-primers.html#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="fu">sum</span>(nhits <span class="sc">&gt;</span> <span class="dv">0</span>))</span>
+<span id="cb8-5"><a href="removing-primers.html#cb8-5" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb8-6"><a href="removing-primers.html#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="fu">rbind</span>(<span class="at">FWD.ForwardReads =</span> <span class="fu">sapply</span>(FWD.orients, primerHits, <span class="at">fn =</span> fs[[<span class="dv">1</span>]]), </span>
+<span id="cb8-7"><a href="removing-primers.html#cb8-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">FWD.ReverseReads =</span> <span class="fu">sapply</span>(FWD.orients, primerHits, <span class="at">fn =</span> rs[[<span class="dv">1</span>]]), </span>
+<span id="cb8-8"><a href="removing-primers.html#cb8-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">REV.ForwardReads =</span> <span class="fu">sapply</span>(REV.orients, primerHits, <span class="at">fn =</span> fs[[<span class="dv">1</span>]]), </span>
+<span id="cb8-9"><a href="removing-primers.html#cb8-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">REV.ReverseReads =</span> <span class="fu">sapply</span>(REV.orients, primerHits, <span class="at">fn =</span> rs[[<span class="dv">1</span>]]))</span></code></pre></div>
+<pre><code>##                  Forward Complement Reverse RevComp
+## FWD.ForwardReads   88713          0       0       0
+## FWD.ReverseReads      17          0       0       2
+## REV.ForwardReads      18          0       0      52
+## REV.ReverseReads   89045          0       0       0</code></pre>
+<p>As expected, the FWD primer is found in the forward reads in its forward orientation, and in some of the reverse reads in its reverse-complement orientation (due to read-through when the 16S region is short). Similarly the REV primer is found with its expected orientations.</p>
+<p>Note: Orientation mixups are a common trip-up. If, for example, the REV primer is matching the Reverse reads in its RevComp orientation, then replace REV with its reverse-complement orientation (REV &lt;- REV.orient[[“RevComp”]]) before proceeding.</p>
+</div>
+<div id="remove-primers" class="section level2 hasAnchor" number="3.2">
+<h2><span class="header-section-number">3.2</span> Remove Primers<a href="removing-primers.html#remove-primers" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>These primers can not be removed. We will do this using the function <code>removePrimers</code> in the <code>dada2</code> package.</p>
+<p>First we assign filenames to the reads with the primers removed.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="removing-primers.html#cb10-1" aria-hidden="true" tabindex="-1"></a>ftrim <span class="ot">&lt;-</span> <span class="fu">file.path</span>(path, <span class="st">&quot;trimmed&quot;</span>, <span class="fu">paste0</span>(<span class="fu">basename</span>(sample.names), <span class="st">&quot;_F_trimmed.fastq.gz&quot;</span>))</span>
+<span id="cb10-2"><a href="removing-primers.html#cb10-2" aria-hidden="true" tabindex="-1"></a>rtrim <span class="ot">&lt;-</span> <span class="fu">file.path</span>(path, <span class="st">&quot;trimmed&quot;</span>, <span class="fu">paste0</span>(<span class="fu">basename</span>(sample.names), <span class="st">&quot;_R_trimmed.fastq.gz&quot;</span>))</span>
+<span id="cb10-3"><a href="removing-primers.html#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-4"><a href="removing-primers.html#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="fu">removePrimers</span>(fs, ftrim, <span class="at">primer.fwd =</span> FWD, <span class="at">orient =</span> <span class="cn">TRUE</span>, <span class="at">verbose =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<pre><code>## Multiple matches to the primer(s) in some sequences. Using the longest possible match.</code></pre>
+<pre><code>## Overwriting file:/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/trimmed/01MP-1_S1_L001_F_trimmed.fastq.gz</code></pre>
+<pre><code>## Read in 93608, output 92517 (98.8%) filtered sequences.</code></pre>
+<pre><code>## Overwriting file:/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/trimmed/01MP-2_S2_L001_F_trimmed.fastq.gz</code></pre>
+<pre><code>## Read in 100143, output 99092 (99%) filtered sequences.</code></pre>
+<pre><code>## Overwriting file:/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/trimmed/01MP-3_S3_L001_F_trimmed.fastq.gz</code></pre>
+<pre><code>## Read in 96997, output 95994 (99%) filtered sequences.</code></pre>
+<pre><code>## Overwriting file:/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/trimmed/03KW-1_S4_L001_F_trimmed.fastq.gz</code></pre>
+<pre><code>## Read in 112608, output 111386 (98.9%) filtered sequences.</code></pre>
+<pre><code>## Overwriting file:/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/trimmed/03KW-2_S5_L001_F_trimmed.fastq.gz</code></pre>
+<pre><code>## Read in 83096, output 82113 (98.8%) filtered sequences.</code></pre>
+<pre><code>## Overwriting file:/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/trimmed/03KW-3_S6_L001_F_trimmed.fastq.gz</code></pre>
+<pre><code>## Read in 124607, output 123229 (98.9%) filtered sequences.</code></pre>
+<pre><code>## Overwriting file:/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/trimmed/04NI-1_S7_L001_F_trimmed.fastq.gz</code></pre>
+<pre><code>## Read in 92467, output 91395 (98.8%) filtered sequences.</code></pre>
+<pre><code>## Overwriting file:/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/trimmed/04NI-2_S8_L001_F_trimmed.fastq.gz</code></pre>
+<pre><code>## Read in 129924, output 128256 (98.7%) filtered sequences.</code></pre>
+<pre><code>## Overwriting file:/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/trimmed/04NI-3_S9_L001_F_trimmed.fastq.gz</code></pre>
+<pre><code>## Read in 74249, output 73408 (98.9%) filtered sequences.</code></pre>
+<pre><code>## Overwriting file:/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/trimmed/05GS-1_S10_L001_F_trimmed.fastq.gz</code></pre>
+<pre><code>## Read in 88649, output 87527 (98.7%) filtered sequences.</code></pre>
+<pre><code>## Overwriting file:/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/trimmed/05GS-2_S11_L001_F_trimmed.fastq.gz</code></pre>
+<pre><code>## Read in 79706, output 78791 (98.9%) filtered sequences.</code></pre>
+<pre><code>## Overwriting file:/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/trimmed/05GS-3_S12_L001_F_trimmed.fastq.gz</code></pre>
+<pre><code>## Read in 101436, output 100145 (98.7%) filtered sequences.</code></pre>
+<pre><code>## Overwriting file:/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/trimmed/06TK-1_S13_L001_F_trimmed.fastq.gz</code></pre>
+<pre><code>## Read in 73883, output 72969 (98.8%) filtered sequences.</code></pre>
+<pre><code>## Overwriting file:/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/trimmed/06TK-2_S14_L001_F_trimmed.fastq.gz</code></pre>
+<pre><code>## Read in 106915, output 105531 (98.7%) filtered sequences.</code></pre>
+<pre><code>## Overwriting file:/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/trimmed/06TK-3_S15_L001_F_trimmed.fastq.gz</code></pre>
+<pre><code>## Read in 109964, output 108725 (98.9%) filtered sequences.</code></pre>
+<pre><code>## Overwriting file:/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/trimmed/07HZ-1_S16_L001_F_trimmed.fastq.gz</code></pre>
+<pre><code>## Read in 98556, output 97437 (98.9%) filtered sequences.</code></pre>
+<pre><code>## Overwriting file:/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/trimmed/07HZ-2_S17_L001_F_trimmed.fastq.gz</code></pre>
+<pre><code>## Read in 70409, output 69544 (98.8%) filtered sequences.</code></pre>
+<pre><code>## Overwriting file:/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/trimmed/07HZ-3_S18_L001_F_trimmed.fastq.gz</code></pre>
+<pre><code>## Read in 84055, output 83145 (98.9%) filtered sequences.</code></pre>
+<pre><code>## Overwriting file:/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/trimmed/08EB-1_S19_L001_F_trimmed.fastq.gz</code></pre>
+<pre><code>## Read in 90049, output 89126 (99%) filtered sequences.</code></pre>
+<pre><code>## Overwriting file:/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/trimmed/08EB-2_S20_L001_F_trimmed.fastq.gz</code></pre>
+<pre><code>## Read in 91152, output 90159 (98.9%) filtered sequences.</code></pre>
+<pre><code>## Overwriting file:/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/trimmed/08EB-3_S21_L001_F_trimmed.fastq.gz</code></pre>
+<pre><code>## Read in 68634, output 67846 (98.9%) filtered sequences.</code></pre>
+<pre><code>## Overwriting file:/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/trimmed/09CR-1_S22_L001_F_trimmed.fastq.gz</code></pre>
+<pre><code>## Read in 96354, output 95106 (98.7%) filtered sequences.</code></pre>
+<pre><code>## Overwriting file:/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/trimmed/09CR-2_S23_L001_F_trimmed.fastq.gz</code></pre>
+<pre><code>## Read in 91679, output 90563 (98.8%) filtered sequences.</code></pre>
+<pre><code>## Overwriting file:/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/trimmed/09CR-3_S24_L001_F_trimmed.fastq.gz</code></pre>
+<pre><code>## Read in 98552, output 97313 (98.7%) filtered sequences.</code></pre>
+<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb60-1"><a href="removing-primers.html#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="fu">removePrimers</span>(rs, rtrim, <span class="at">primer.fwd =</span> REV, <span class="at">orient =</span> <span class="cn">TRUE</span>, <span class="at">verbose =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<pre><code>## Overwriting file:/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/trimmed/01MP-1_S1_L001_R_trimmed.fastq.gz</code></pre>
+<pre><code>## Read in 93608, output 91768 (98%) filtered sequences.</code></pre>
+<pre><code>## Multiple matches to the primer(s) in some sequences. Using the longest possible match.</code></pre>
+<pre><code>## Overwriting file:/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/trimmed/01MP-2_S2_L001_R_trimmed.fastq.gz</code></pre>
+<pre><code>## Read in 100143, output 98156 (98%) filtered sequences.</code></pre>
+<pre><code>## Overwriting file:/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/trimmed/01MP-3_S3_L001_R_trimmed.fastq.gz</code></pre>
+<pre><code>## Read in 96997, output 95041 (98%) filtered sequences.</code></pre>
+<pre><code>## Overwriting file:/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/trimmed/03KW-1_S4_L001_R_trimmed.fastq.gz</code></pre>
+<pre><code>## Read in 112608, output 110490 (98.1%) filtered sequences.</code></pre>
+<pre><code>## Overwriting file:/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/trimmed/03KW-2_S5_L001_R_trimmed.fastq.gz</code></pre>
+<pre><code>## Read in 83096, output 81614 (98.2%) filtered sequences.</code></pre>
+<pre><code>## Overwriting file:/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/trimmed/03KW-3_S6_L001_R_trimmed.fastq.gz</code></pre>
+<pre><code>## Read in 124607, output 122243 (98.1%) filtered sequences.</code></pre>
+<pre><code>## Overwriting file:/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/trimmed/04NI-1_S7_L001_R_trimmed.fastq.gz</code></pre>
+<pre><code>## Read in 92467, output 90675 (98.1%) filtered sequences.</code></pre>
+<pre><code>## Overwriting file:/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/trimmed/04NI-2_S8_L001_R_trimmed.fastq.gz</code></pre>
+<pre><code>## Read in 129924, output 127141 (97.9%) filtered sequences.</code></pre>
+<pre><code>## Overwriting file:/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/trimmed/04NI-3_S9_L001_R_trimmed.fastq.gz</code></pre>
+<pre><code>## Read in 74249, output 72650 (97.8%) filtered sequences.</code></pre>
+<pre><code>## Overwriting file:/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/trimmed/05GS-1_S10_L001_R_trimmed.fastq.gz</code></pre>
+<pre><code>## Read in 88649, output 86930 (98.1%) filtered sequences.</code></pre>
+<pre><code>## Overwriting file:/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/trimmed/05GS-2_S11_L001_R_trimmed.fastq.gz</code></pre>
+<pre><code>## Read in 79706, output 78211 (98.1%) filtered sequences.</code></pre>
+<pre><code>## Overwriting file:/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/trimmed/05GS-3_S12_L001_R_trimmed.fastq.gz</code></pre>
+<pre><code>## Read in 101436, output 99510 (98.1%) filtered sequences.</code></pre>
+<pre><code>## Overwriting file:/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/trimmed/06TK-1_S13_L001_R_trimmed.fastq.gz</code></pre>
+<pre><code>## Read in 73883, output 72502 (98.1%) filtered sequences.</code></pre>
+<pre><code>## Overwriting file:/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/trimmed/06TK-2_S14_L001_R_trimmed.fastq.gz</code></pre>
+<pre><code>## Read in 106915, output 104818 (98%) filtered sequences.</code></pre>
+<pre><code>## Overwriting file:/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/trimmed/06TK-3_S15_L001_R_trimmed.fastq.gz</code></pre>
+<pre><code>## Read in 109964, output 108017 (98.2%) filtered sequences.</code></pre>
+<pre><code>## Overwriting file:/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/trimmed/07HZ-1_S16_L001_R_trimmed.fastq.gz</code></pre>
+<pre><code>## Read in 98556, output 96351 (97.8%) filtered sequences.</code></pre>
+<pre><code>## Overwriting file:/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/trimmed/07HZ-2_S17_L001_R_trimmed.fastq.gz</code></pre>
+<pre><code>## Read in 70409, output 68992 (98%) filtered sequences.</code></pre>
+<pre><code>## Overwriting file:/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/trimmed/07HZ-3_S18_L001_R_trimmed.fastq.gz</code></pre>
+<pre><code>## Read in 84055, output 82394 (98%) filtered sequences.</code></pre>
+<pre><code>## Overwriting file:/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/trimmed/08EB-1_S19_L001_R_trimmed.fastq.gz</code></pre>
+<pre><code>## Read in 90049, output 88430 (98.2%) filtered sequences.</code></pre>
+<pre><code>## Overwriting file:/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/trimmed/08EB-2_S20_L001_R_trimmed.fastq.gz</code></pre>
+<pre><code>## Read in 91152, output 89319 (98%) filtered sequences.</code></pre>
+<pre><code>## Overwriting file:/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/trimmed/08EB-3_S21_L001_R_trimmed.fastq.gz</code></pre>
+<pre><code>## Read in 68634, output 67394 (98.2%) filtered sequences.</code></pre>
+<pre><code>## Overwriting file:/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/trimmed/09CR-1_S22_L001_R_trimmed.fastq.gz</code></pre>
+<pre><code>## Read in 96354, output 94521 (98.1%) filtered sequences.</code></pre>
+<pre><code>## Overwriting file:/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/trimmed/09CR-2_S23_L001_R_trimmed.fastq.gz</code></pre>
+<pre><code>## Read in 91679, output 89924 (98.1%) filtered sequences.</code></pre>
+<pre><code>## Overwriting file:/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/trimmed/09CR-3_S24_L001_R_trimmed.fastq.gz</code></pre>
+<pre><code>## Read in 98552, output 96457 (97.9%) filtered sequences.</code></pre>
+<p>As a sanity check, we will count the presence of the primers in the first cut sample:</p>
+<div class="sourceCode" id="cb110"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb110-1"><a href="removing-primers.html#cb110-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rbind</span>(<span class="at">FWD.ForwardReads =</span> <span class="fu">sapply</span>(FWD.orients, primerHits, <span class="at">fn =</span> ftrim[[<span class="dv">1</span>]]), </span>
+<span id="cb110-2"><a href="removing-primers.html#cb110-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">FWD.ReverseReads =</span> <span class="fu">sapply</span>(FWD.orients, primerHits, <span class="at">fn =</span> ftrim[[<span class="dv">1</span>]]), </span>
+<span id="cb110-3"><a href="removing-primers.html#cb110-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">REV.ForwardReads =</span> <span class="fu">sapply</span>(REV.orients, primerHits, <span class="at">fn =</span> rtrim[[<span class="dv">1</span>]]), </span>
+<span id="cb110-4"><a href="removing-primers.html#cb110-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">REV.ReverseReads =</span> <span class="fu">sapply</span>(REV.orients, primerHits, <span class="at">fn =</span> rtrim[[<span class="dv">1</span>]]))</span></code></pre></div>
+<pre><code>##                  Forward Complement Reverse RevComp
+## FWD.ForwardReads      13          0       0       0
+## FWD.ReverseReads      13          0       0       0
+## REV.ForwardReads       0          0       0       0
+## REV.ReverseReads       0          0       0       0</code></pre>
+<p>Success!</p>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="introduction.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="filter.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["16Sworkbook.pdf", "16Sworkbook.epub"],
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>
