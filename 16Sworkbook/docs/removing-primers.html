@@ -232,36 +232,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## [43] &quot;09CR-1_S22_L001_R1_001.fastq.gz&quot; &quot;09CR-1_S22_L001_R2_001.fastq.gz&quot;
 ## [45] &quot;09CR-2_S23_L001_R1_001.fastq.gz&quot; &quot;09CR-2_S23_L001_R2_001.fastq.gz&quot;
 ## [47] &quot;09CR-3_S24_L001_R1_001.fastq.gz&quot; &quot;09CR-3_S24_L001_R2_001.fastq.gz&quot;
-## [49] &quot;trimmed&quot;</code></pre>
+## [49] &quot;filtered&quot;                        &quot;trimmed&quot;</code></pre>
 <p>First, we read in the names of the fastq files, and perform some string manipulation. We need to generate matched lists of the forward and reverse read files, as well as parsing out the sample name. Here we assume forward and reverse read files are in the format <code>SAMPLENAME_R1_001.fastq.gz</code> and <code>SAMPLENAME_R2_001.fastq.gz</code>, respectively, so string parsing may have to be altered in your own data if your filenames have a different format.</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="removing-primers.html#cb3-1" aria-hidden="true" tabindex="-1"></a>fs <span class="ot">&lt;-</span> <span class="fu">sort</span>(<span class="fu">list.files</span>(path, <span class="at">pattern =</span> <span class="st">&quot;_R1_001.fastq.gz&quot;</span>, <span class="at">full.names =</span> <span class="cn">TRUE</span>))</span>
 <span id="cb3-2"><a href="removing-primers.html#cb3-2" aria-hidden="true" tabindex="-1"></a>rs <span class="ot">&lt;-</span> <span class="fu">sort</span>(<span class="fu">list.files</span>(path, <span class="at">pattern =</span> <span class="st">&quot;_R2_001.fastq.gz&quot;</span>, <span class="at">full.names =</span> <span class="cn">TRUE</span>))</span>
 <span id="cb3-3"><a href="removing-primers.html#cb3-3" aria-hidden="true" tabindex="-1"></a>sample.names <span class="ot">&lt;-</span> <span class="fu">sapply</span>(<span class="fu">strsplit</span>(fs, <span class="st">&quot;_R&quot;</span>), <span class="st">`</span><span class="at">[</span><span class="st">`</span>, <span class="dv">1</span>)</span>
-<span id="cb3-4"><a href="removing-primers.html#cb3-4" aria-hidden="true" tabindex="-1"></a>sample.names</span></code></pre></div>
-<pre><code>##  [1] &quot;/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/01MP-1_S1_L001&quot; 
-##  [2] &quot;/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/01MP-2_S2_L001&quot; 
-##  [3] &quot;/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/01MP-3_S3_L001&quot; 
-##  [4] &quot;/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/03KW-1_S4_L001&quot; 
-##  [5] &quot;/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/03KW-2_S5_L001&quot; 
-##  [6] &quot;/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/03KW-3_S6_L001&quot; 
-##  [7] &quot;/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/04NI-1_S7_L001&quot; 
-##  [8] &quot;/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/04NI-2_S8_L001&quot; 
-##  [9] &quot;/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/04NI-3_S9_L001&quot; 
-## [10] &quot;/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/05GS-1_S10_L001&quot;
-## [11] &quot;/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/05GS-2_S11_L001&quot;
-## [12] &quot;/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/05GS-3_S12_L001&quot;
-## [13] &quot;/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/06TK-1_S13_L001&quot;
-## [14] &quot;/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/06TK-2_S14_L001&quot;
-## [15] &quot;/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/06TK-3_S15_L001&quot;
-## [16] &quot;/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/07HZ-1_S16_L001&quot;
-## [17] &quot;/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/07HZ-2_S17_L001&quot;
-## [18] &quot;/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/07HZ-3_S18_L001&quot;
-## [19] &quot;/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/08EB-1_S19_L001&quot;
-## [20] &quot;/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/08EB-2_S20_L001&quot;
-## [21] &quot;/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/08EB-3_S21_L001&quot;
-## [22] &quot;/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/09CR-1_S22_L001&quot;
-## [23] &quot;/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/09CR-2_S23_L001&quot;
-## [24] &quot;/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/09CR-3_S24_L001&quot;</code></pre>
+<span id="cb3-4"><a href="removing-primers.html#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(sample.names)</span></code></pre></div>
+<pre><code>## [1] &quot;/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/01MP-1_S1_L001&quot;
+## [2] &quot;/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/01MP-2_S2_L001&quot;
+## [3] &quot;/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/01MP-3_S3_L001&quot;
+## [4] &quot;/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/03KW-1_S4_L001&quot;
+## [5] &quot;/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/03KW-2_S5_L001&quot;
+## [6] &quot;/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/03KW-3_S6_L001&quot;</code></pre>
 <p>V3-V4 primers were used to amplify this dataset.</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="removing-primers.html#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Set primer/adapter sequences</span></span>
 <span id="cb5-2"><a href="removing-primers.html#cb5-2" aria-hidden="true" tabindex="-1"></a>FWD <span class="ot">&lt;-</span> <span class="st">&quot;CCTACGGGNGGCWGCAG&quot;</span></span>
@@ -305,111 +287,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="removing-primers.html#cb10-1" aria-hidden="true" tabindex="-1"></a>ftrim <span class="ot">&lt;-</span> <span class="fu">file.path</span>(path, <span class="st">&quot;trimmed&quot;</span>, <span class="fu">paste0</span>(<span class="fu">basename</span>(sample.names), <span class="st">&quot;_F_trimmed.fastq.gz&quot;</span>))</span>
 <span id="cb10-2"><a href="removing-primers.html#cb10-2" aria-hidden="true" tabindex="-1"></a>rtrim <span class="ot">&lt;-</span> <span class="fu">file.path</span>(path, <span class="st">&quot;trimmed&quot;</span>, <span class="fu">paste0</span>(<span class="fu">basename</span>(sample.names), <span class="st">&quot;_R_trimmed.fastq.gz&quot;</span>))</span>
 <span id="cb10-3"><a href="removing-primers.html#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-4"><a href="removing-primers.html#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="fu">removePrimers</span>(fs, ftrim, <span class="at">primer.fwd =</span> FWD, <span class="at">orient =</span> <span class="cn">TRUE</span>, <span class="at">verbose =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
-<pre><code>## Multiple matches to the primer(s) in some sequences. Using the longest possible match.</code></pre>
-<pre><code>## Overwriting file:/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/trimmed/01MP-1_S1_L001_F_trimmed.fastq.gz</code></pre>
-<pre><code>## Read in 93608, output 92517 (98.8%) filtered sequences.</code></pre>
-<pre><code>## Overwriting file:/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/trimmed/01MP-2_S2_L001_F_trimmed.fastq.gz</code></pre>
-<pre><code>## Read in 100143, output 99092 (99%) filtered sequences.</code></pre>
-<pre><code>## Overwriting file:/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/trimmed/01MP-3_S3_L001_F_trimmed.fastq.gz</code></pre>
-<pre><code>## Read in 96997, output 95994 (99%) filtered sequences.</code></pre>
-<pre><code>## Overwriting file:/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/trimmed/03KW-1_S4_L001_F_trimmed.fastq.gz</code></pre>
-<pre><code>## Read in 112608, output 111386 (98.9%) filtered sequences.</code></pre>
-<pre><code>## Overwriting file:/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/trimmed/03KW-2_S5_L001_F_trimmed.fastq.gz</code></pre>
-<pre><code>## Read in 83096, output 82113 (98.8%) filtered sequences.</code></pre>
-<pre><code>## Overwriting file:/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/trimmed/03KW-3_S6_L001_F_trimmed.fastq.gz</code></pre>
-<pre><code>## Read in 124607, output 123229 (98.9%) filtered sequences.</code></pre>
-<pre><code>## Overwriting file:/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/trimmed/04NI-1_S7_L001_F_trimmed.fastq.gz</code></pre>
-<pre><code>## Read in 92467, output 91395 (98.8%) filtered sequences.</code></pre>
-<pre><code>## Overwriting file:/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/trimmed/04NI-2_S8_L001_F_trimmed.fastq.gz</code></pre>
-<pre><code>## Read in 129924, output 128256 (98.7%) filtered sequences.</code></pre>
-<pre><code>## Overwriting file:/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/trimmed/04NI-3_S9_L001_F_trimmed.fastq.gz</code></pre>
-<pre><code>## Read in 74249, output 73408 (98.9%) filtered sequences.</code></pre>
-<pre><code>## Overwriting file:/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/trimmed/05GS-1_S10_L001_F_trimmed.fastq.gz</code></pre>
-<pre><code>## Read in 88649, output 87527 (98.7%) filtered sequences.</code></pre>
-<pre><code>## Overwriting file:/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/trimmed/05GS-2_S11_L001_F_trimmed.fastq.gz</code></pre>
-<pre><code>## Read in 79706, output 78791 (98.9%) filtered sequences.</code></pre>
-<pre><code>## Overwriting file:/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/trimmed/05GS-3_S12_L001_F_trimmed.fastq.gz</code></pre>
-<pre><code>## Read in 101436, output 100145 (98.7%) filtered sequences.</code></pre>
-<pre><code>## Overwriting file:/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/trimmed/06TK-1_S13_L001_F_trimmed.fastq.gz</code></pre>
-<pre><code>## Read in 73883, output 72969 (98.8%) filtered sequences.</code></pre>
-<pre><code>## Overwriting file:/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/trimmed/06TK-2_S14_L001_F_trimmed.fastq.gz</code></pre>
-<pre><code>## Read in 106915, output 105531 (98.7%) filtered sequences.</code></pre>
-<pre><code>## Overwriting file:/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/trimmed/06TK-3_S15_L001_F_trimmed.fastq.gz</code></pre>
-<pre><code>## Read in 109964, output 108725 (98.9%) filtered sequences.</code></pre>
-<pre><code>## Overwriting file:/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/trimmed/07HZ-1_S16_L001_F_trimmed.fastq.gz</code></pre>
-<pre><code>## Read in 98556, output 97437 (98.9%) filtered sequences.</code></pre>
-<pre><code>## Overwriting file:/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/trimmed/07HZ-2_S17_L001_F_trimmed.fastq.gz</code></pre>
-<pre><code>## Read in 70409, output 69544 (98.8%) filtered sequences.</code></pre>
-<pre><code>## Overwriting file:/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/trimmed/07HZ-3_S18_L001_F_trimmed.fastq.gz</code></pre>
-<pre><code>## Read in 84055, output 83145 (98.9%) filtered sequences.</code></pre>
-<pre><code>## Overwriting file:/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/trimmed/08EB-1_S19_L001_F_trimmed.fastq.gz</code></pre>
-<pre><code>## Read in 90049, output 89126 (99%) filtered sequences.</code></pre>
-<pre><code>## Overwriting file:/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/trimmed/08EB-2_S20_L001_F_trimmed.fastq.gz</code></pre>
-<pre><code>## Read in 91152, output 90159 (98.9%) filtered sequences.</code></pre>
-<pre><code>## Overwriting file:/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/trimmed/08EB-3_S21_L001_F_trimmed.fastq.gz</code></pre>
-<pre><code>## Read in 68634, output 67846 (98.9%) filtered sequences.</code></pre>
-<pre><code>## Overwriting file:/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/trimmed/09CR-1_S22_L001_F_trimmed.fastq.gz</code></pre>
-<pre><code>## Read in 96354, output 95106 (98.7%) filtered sequences.</code></pre>
-<pre><code>## Overwriting file:/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/trimmed/09CR-2_S23_L001_F_trimmed.fastq.gz</code></pre>
-<pre><code>## Read in 91679, output 90563 (98.8%) filtered sequences.</code></pre>
-<pre><code>## Overwriting file:/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/trimmed/09CR-3_S24_L001_F_trimmed.fastq.gz</code></pre>
-<pre><code>## Read in 98552, output 97313 (98.7%) filtered sequences.</code></pre>
-<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb60-1"><a href="removing-primers.html#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="fu">removePrimers</span>(rs, rtrim, <span class="at">primer.fwd =</span> REV, <span class="at">orient =</span> <span class="cn">TRUE</span>, <span class="at">verbose =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
-<pre><code>## Overwriting file:/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/trimmed/01MP-1_S1_L001_R_trimmed.fastq.gz</code></pre>
-<pre><code>## Read in 93608, output 91768 (98%) filtered sequences.</code></pre>
-<pre><code>## Multiple matches to the primer(s) in some sequences. Using the longest possible match.</code></pre>
-<pre><code>## Overwriting file:/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/trimmed/01MP-2_S2_L001_R_trimmed.fastq.gz</code></pre>
-<pre><code>## Read in 100143, output 98156 (98%) filtered sequences.</code></pre>
-<pre><code>## Overwriting file:/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/trimmed/01MP-3_S3_L001_R_trimmed.fastq.gz</code></pre>
-<pre><code>## Read in 96997, output 95041 (98%) filtered sequences.</code></pre>
-<pre><code>## Overwriting file:/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/trimmed/03KW-1_S4_L001_R_trimmed.fastq.gz</code></pre>
-<pre><code>## Read in 112608, output 110490 (98.1%) filtered sequences.</code></pre>
-<pre><code>## Overwriting file:/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/trimmed/03KW-2_S5_L001_R_trimmed.fastq.gz</code></pre>
-<pre><code>## Read in 83096, output 81614 (98.2%) filtered sequences.</code></pre>
-<pre><code>## Overwriting file:/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/trimmed/03KW-3_S6_L001_R_trimmed.fastq.gz</code></pre>
-<pre><code>## Read in 124607, output 122243 (98.1%) filtered sequences.</code></pre>
-<pre><code>## Overwriting file:/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/trimmed/04NI-1_S7_L001_R_trimmed.fastq.gz</code></pre>
-<pre><code>## Read in 92467, output 90675 (98.1%) filtered sequences.</code></pre>
-<pre><code>## Overwriting file:/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/trimmed/04NI-2_S8_L001_R_trimmed.fastq.gz</code></pre>
-<pre><code>## Read in 129924, output 127141 (97.9%) filtered sequences.</code></pre>
-<pre><code>## Overwriting file:/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/trimmed/04NI-3_S9_L001_R_trimmed.fastq.gz</code></pre>
-<pre><code>## Read in 74249, output 72650 (97.8%) filtered sequences.</code></pre>
-<pre><code>## Overwriting file:/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/trimmed/05GS-1_S10_L001_R_trimmed.fastq.gz</code></pre>
-<pre><code>## Read in 88649, output 86930 (98.1%) filtered sequences.</code></pre>
-<pre><code>## Overwriting file:/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/trimmed/05GS-2_S11_L001_R_trimmed.fastq.gz</code></pre>
-<pre><code>## Read in 79706, output 78211 (98.1%) filtered sequences.</code></pre>
-<pre><code>## Overwriting file:/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/trimmed/05GS-3_S12_L001_R_trimmed.fastq.gz</code></pre>
-<pre><code>## Read in 101436, output 99510 (98.1%) filtered sequences.</code></pre>
-<pre><code>## Overwriting file:/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/trimmed/06TK-1_S13_L001_R_trimmed.fastq.gz</code></pre>
-<pre><code>## Read in 73883, output 72502 (98.1%) filtered sequences.</code></pre>
-<pre><code>## Overwriting file:/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/trimmed/06TK-2_S14_L001_R_trimmed.fastq.gz</code></pre>
-<pre><code>## Read in 106915, output 104818 (98%) filtered sequences.</code></pre>
-<pre><code>## Overwriting file:/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/trimmed/06TK-3_S15_L001_R_trimmed.fastq.gz</code></pre>
-<pre><code>## Read in 109964, output 108017 (98.2%) filtered sequences.</code></pre>
-<pre><code>## Overwriting file:/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/trimmed/07HZ-1_S16_L001_R_trimmed.fastq.gz</code></pre>
-<pre><code>## Read in 98556, output 96351 (97.8%) filtered sequences.</code></pre>
-<pre><code>## Overwriting file:/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/trimmed/07HZ-2_S17_L001_R_trimmed.fastq.gz</code></pre>
-<pre><code>## Read in 70409, output 68992 (98%) filtered sequences.</code></pre>
-<pre><code>## Overwriting file:/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/trimmed/07HZ-3_S18_L001_R_trimmed.fastq.gz</code></pre>
-<pre><code>## Read in 84055, output 82394 (98%) filtered sequences.</code></pre>
-<pre><code>## Overwriting file:/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/trimmed/08EB-1_S19_L001_R_trimmed.fastq.gz</code></pre>
-<pre><code>## Read in 90049, output 88430 (98.2%) filtered sequences.</code></pre>
-<pre><code>## Overwriting file:/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/trimmed/08EB-2_S20_L001_R_trimmed.fastq.gz</code></pre>
-<pre><code>## Read in 91152, output 89319 (98%) filtered sequences.</code></pre>
-<pre><code>## Overwriting file:/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/trimmed/08EB-3_S21_L001_R_trimmed.fastq.gz</code></pre>
-<pre><code>## Read in 68634, output 67394 (98.2%) filtered sequences.</code></pre>
-<pre><code>## Overwriting file:/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/trimmed/09CR-1_S22_L001_R_trimmed.fastq.gz</code></pre>
-<pre><code>## Read in 96354, output 94521 (98.1%) filtered sequences.</code></pre>
-<pre><code>## Overwriting file:/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/trimmed/09CR-2_S23_L001_R_trimmed.fastq.gz</code></pre>
-<pre><code>## Read in 91679, output 89924 (98.1%) filtered sequences.</code></pre>
-<pre><code>## Overwriting file:/Users/alana.schick/Desktop/microbiomeworkshop2022/rawdata/trimmed/09CR-3_S24_L001_R_trimmed.fastq.gz</code></pre>
-<pre><code>## Read in 98552, output 96457 (97.9%) filtered sequences.</code></pre>
+<span id="cb10-4"><a href="removing-primers.html#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="fu">removePrimers</span>(fs, ftrim, <span class="at">primer.fwd =</span> FWD, <span class="at">orient =</span> <span class="cn">TRUE</span>, <span class="at">verbose =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb10-5"><a href="removing-primers.html#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="fu">removePrimers</span>(rs, rtrim, <span class="at">primer.fwd =</span> REV, <span class="at">orient =</span> <span class="cn">TRUE</span>, <span class="at">verbose =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
 <p>As a sanity check, we will count the presence of the primers in the first cut sample:</p>
-<div class="sourceCode" id="cb110"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb110-1"><a href="removing-primers.html#cb110-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rbind</span>(<span class="at">FWD.ForwardReads =</span> <span class="fu">sapply</span>(FWD.orients, primerHits, <span class="at">fn =</span> ftrim[[<span class="dv">1</span>]]), </span>
-<span id="cb110-2"><a href="removing-primers.html#cb110-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">FWD.ReverseReads =</span> <span class="fu">sapply</span>(FWD.orients, primerHits, <span class="at">fn =</span> ftrim[[<span class="dv">1</span>]]), </span>
-<span id="cb110-3"><a href="removing-primers.html#cb110-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">REV.ForwardReads =</span> <span class="fu">sapply</span>(REV.orients, primerHits, <span class="at">fn =</span> rtrim[[<span class="dv">1</span>]]), </span>
-<span id="cb110-4"><a href="removing-primers.html#cb110-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">REV.ReverseReads =</span> <span class="fu">sapply</span>(REV.orients, primerHits, <span class="at">fn =</span> rtrim[[<span class="dv">1</span>]]))</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="removing-primers.html#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rbind</span>(<span class="at">FWD.ForwardReads =</span> <span class="fu">sapply</span>(FWD.orients, primerHits, <span class="at">fn =</span> ftrim[[<span class="dv">1</span>]]), </span>
+<span id="cb11-2"><a href="removing-primers.html#cb11-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">FWD.ReverseReads =</span> <span class="fu">sapply</span>(FWD.orients, primerHits, <span class="at">fn =</span> ftrim[[<span class="dv">1</span>]]), </span>
+<span id="cb11-3"><a href="removing-primers.html#cb11-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">REV.ForwardReads =</span> <span class="fu">sapply</span>(REV.orients, primerHits, <span class="at">fn =</span> rtrim[[<span class="dv">1</span>]]), </span>
+<span id="cb11-4"><a href="removing-primers.html#cb11-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">REV.ReverseReads =</span> <span class="fu">sapply</span>(REV.orients, primerHits, <span class="at">fn =</span> rtrim[[<span class="dv">1</span>]]))</span></code></pre></div>
 <pre><code>##                  Forward Complement Reverse RevComp
 ## FWD.ForwardReads      13          0       0       0
 ## FWD.ReverseReads      13          0       0       0
