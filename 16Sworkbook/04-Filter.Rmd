@@ -42,6 +42,10 @@ The reverse reads are of significantly worse quality, especially at the end, whi
 
 ### Exercise
 
+Plot the quality profiles of several more samples. What do you see?
+
+### Exercise
+
 Based on the expected size of the amplicon, what is the minimum truncation length that would still leave about 30 nucleotides of overlap?
 
 ## Filter and Trim
@@ -58,7 +62,7 @@ We’ll use standard filtering parameters: `maxN=0` (DADA2 requires no Ns), `tru
 ```{r}
 
 out <- filterAndTrim(ftrim, ffilt, rtrim, rfilt, 
-                     truncLen=c(240,160),
+                     truncLen=c(260,220),
                      maxN=0, 
                      maxEE=c(2,2), 
                      truncQ=2, 
@@ -77,9 +81,9 @@ Considerations for your own data:
 
 The filtering parameters are starting points, not set in stone.
 
-If you want to speed up downstream computation, consider tightening maxEE.
+If you want to speed up downstream computation, consider tightening `maxEE`.
 
-If too few reads are passing the filter, consider relaxing maxEE, perhaps especially on the reverse reads (eg. maxEE=c(2,5)), and reducing the truncLen to remove low quality tails.
+If too few reads are passing the filter, consider relaxing `maxEE`, perhaps especially on the reverse reads (eg. `maxEE=c(2,5))`, and reducing the `truncLen` to remove low quality tails.
 
 Remember though, when choosing truncLen for paired-end reads you must maintain overlap after truncation in order to merge them later.
 

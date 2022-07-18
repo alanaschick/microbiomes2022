@@ -26,7 +26,8 @@ Time | Topic
 09:40  | 2. Introduction
 10:00  | 3. Removing primers
 10:15  | Break
-10:30  | 4. Filter
+10:30  | 3. Removing primers (cont)
+10:45  | 4. Filter
 11:30  | Lunch break
 12:00  | 5. Denoise
 13:00  | Finish
@@ -35,7 +36,7 @@ Time | Topic
 
 Time | Topic                                         
 :-------| :----------------------------------
-09:00  | Session
+09:00  | 6. Assign Taxonomy
 10:15  | Break
 10:30  | Session
 11:30  | Lunch break
@@ -56,4 +57,5 @@ Time | Topic
 
 ## Important links {-}
 
-- Project dataset : [link](https://www.dropbox.com/s/glw1aig4jsyxuem/raw_data.zip?dl=0)
+- Project dataset: [link](https://www.dropbox.com/s/glw1aig4jsyxuem/raw_data.zip?dl=0)
+- DADA2 paper: [link](https://www.nature.com/articles/nmeth.3869#methods)

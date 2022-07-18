@@ -23,7 +23,7 @@
 <meta name="author" content="Alana Schick" />
 
 
-<meta name="date" content="2022-07-17" />
+<meta name="date" content="2022-07-18" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -106,13 +106,25 @@
 <li class="chapter" data-level="4.1" data-path="filter.html"><a href="filter.html#inspect"><i class="fa fa-check"></i><b>4.1</b> Inspect</a>
 <ul>
 <li class="chapter" data-level="4.1.1" data-path="filter.html"><a href="filter.html#exercise-1"><i class="fa fa-check"></i><b>4.1.1</b> Exercise</a></li>
+<li class="chapter" data-level="4.1.2" data-path="filter.html"><a href="filter.html#exercise-2"><i class="fa fa-check"></i><b>4.1.2</b> Exercise</a></li>
 </ul></li>
 <li class="chapter" data-level="4.2" data-path="filter.html"><a href="filter.html#filter-and-trim"><i class="fa fa-check"></i><b>4.2</b> Filter and Trim</a>
 <ul>
-<li class="chapter" data-level="4.2.1" data-path="filter.html"><a href="filter.html#exercise-2"><i class="fa fa-check"></i><b>4.2.1</b> Exercise</a></li>
+<li class="chapter" data-level="4.2.1" data-path="filter.html"><a href="filter.html#exercise-3"><i class="fa fa-check"></i><b>4.2.1</b> Exercise</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="5" data-path="denoise.html"><a href="denoise.html"><i class="fa fa-check"></i><b>5</b> Denoise</a></li>
+<li class="chapter" data-level="5" data-path="denoise.html"><a href="denoise.html"><i class="fa fa-check"></i><b>5</b> Denoise</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="denoise.html"><a href="denoise.html#learn-the-error-rates"><i class="fa fa-check"></i><b>5.1</b> Learn the Error Rates</a></li>
+<li class="chapter" data-level="5.2" data-path="denoise.html"><a href="denoise.html#dereplicate"><i class="fa fa-check"></i><b>5.2</b> Dereplicate</a></li>
+<li class="chapter" data-level="5.3" data-path="denoise.html"><a href="denoise.html#sample-inference"><i class="fa fa-check"></i><b>5.3</b> Sample Inference</a></li>
+<li class="chapter" data-level="5.4" data-path="denoise.html"><a href="denoise.html#merge-reads"><i class="fa fa-check"></i><b>5.4</b> Merge reads</a></li>
+<li class="chapter" data-level="5.5" data-path="denoise.html"><a href="denoise.html#construct-sequence-table"><i class="fa fa-check"></i><b>5.5</b> Construct sequence table</a>
+<ul>
+<li class="chapter" data-level="5.5.1" data-path="denoise.html"><a href="denoise.html#exercise-4"><i class="fa fa-check"></i><b>5.5.1</b> Exercise</a></li>
+<li class="chapter" data-level="5.5.2" data-path="denoise.html"><a href="denoise.html#exercise-5"><i class="fa fa-check"></i><b>5.5.2</b> Exercise</a></li>
+</ul></li>
+</ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
 
@@ -136,7 +148,7 @@
 <div id="header">
 <h1 class="title">16s Microbiome Analysis Workshop</h1>
 <p class="author"><em>Alana Schick</em></p>
-<p class="date"><em>2022-07-17</em></p>
+<p class="date"><em>2022-07-18</em></p>
 </div>
 <div id="welcome" class="section level1 unnumbered hasAnchor">
 <h1>Welcome<a href="index.html#welcome" class="anchor-section" aria-label="Anchor link to header"></a></h1>
@@ -180,17 +192,21 @@
 </tr>
 <tr class="odd">
 <td align="left">10:30</td>
-<td align="left">4. Filter</td>
+<td align="left">3. Removing primers (cont)</td>
 </tr>
 <tr class="even">
+<td align="left">10:45</td>
+<td align="left">4. Filter</td>
+</tr>
+<tr class="odd">
 <td align="left">11:30</td>
 <td align="left">Lunch break</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">12:00</td>
 <td align="left">5. Denoise</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">13:00</td>
 <td align="left">Finish</td>
 </tr>
@@ -209,7 +225,7 @@
 <tbody>
 <tr class="odd">
 <td align="left">09:00</td>
-<td align="left">Session</td>
+<td align="left">6. Assign Taxonomy</td>
 </tr>
 <tr class="even">
 <td align="left">10:15</td>
@@ -275,7 +291,8 @@
 <div id="important-links" class="section level2 unnumbered hasAnchor">
 <h2>Important links<a href="index.html#important-links" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <ul>
-<li>Project dataset : <a href="https://www.dropbox.com/s/glw1aig4jsyxuem/raw_data.zip?dl=0">link</a></li>
+<li>Project dataset: <a href="https://www.dropbox.com/s/glw1aig4jsyxuem/raw_data.zip?dl=0">link</a></li>
+<li>DADA2 paper: <a href="https://www.nature.com/articles/nmeth.3869#methods">link</a></li>
 </ul>
 
 </div>

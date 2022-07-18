@@ -2,8 +2,6 @@
 library(dada2)
 library(tidyverse)
 library(phyloseq)
-library(Biostrings)
-library(ShortRead)
 
 path <- "~/Desktop/microbiomeworkshop2022/rawdata"
 
@@ -12,9 +10,93 @@ rs <- sort(list.files(path, pattern = "_R2_001.fastq.gz", full.names = TRUE))
 sample.names <- sapply(strsplit(fs, "_R"), `[`, 1)
 
 
-ftrim <- file.path(path, "trimmed", paste0(basename(sample.names), "_F_trimmed.fastq.gz"))
-rtrim <- file.path(path, "trimmed", paste0(basename(sample.names), "_R_trimmed.fastq.gz"))
+ffilt <- file.path(path, "filtered", paste0(basename(sample.names), "_F_filtered.fastq.gz"))
+rfilt <- file.path(path, "filtered", paste0(basename(sample.names), "_R_filtered.fastq.gz"))
+
+path <- "~/Desktop/microbiomeworkshop2022/results"
 ```
 
 # Denoise
+
+The `DADA2` algorithm makes use of a parametric error model (`err`) and every amplicon dataset has a different set of error rates. The `learnErrors` method learns this error model from the data, by alternating estimation of the error rates and inference of sample composition until they converge on a jointly consistent solution. As in many machine-learning problems, the algorithm must begin with an initial guess, for which the maximum possible error rates in this data are used (the error rates if only the most abundant sequence is correct and all the rest are errors).
+
+## Learn the Error Rates
+
+Note: this is the most computationally intensive part of the process. Depending on your computer, this could take a while.
+
+```{r}
+errF <- learnErrors(ffilt, multithread = TRUE)
+errR <- learnErrors(rfilt, multithread = TRUE)
+```
+
+Visualize the estimated error rates:
+
+```{r}
+plotErrors(errF, nominalQ = TRUE)
+```
+
+The error rates for each possible transition (A→C, A→G, …) are shown. Points are the observed error rates for each consensus quality score. The black line shows the estimated error rates after convergence of the machine-learning algorithm. The red line shows the error rates expected under the nominal definition of the Q-score. Here the estimated error rates (black line) are a good fit to the observed rates (points), and the error rates drop with increased quality as expected. Everything looks reasonable and we proceed with confidence.
+
+## Dereplicate
+
+```{r}
+derep_forward <- derepFastq(ffilt)
+derep_reverse <- derepFastq(rfilt)
+```
+
+## Sample Inference
+
+We are now ready to apply the core sample inference algorithm to the filtered and trimmed sequence data.
+
+```{r}
+dadaFs <- dada(derep_forward, err = errF, multithread = TRUE)
+dadaRs <- dada(derep_reverse, err = errR, multithread = TRUE)
+```
+
+Inspecting the returned dada-class object:
+
+```{r}
+dadaFs[[1]]
+```
+
+There is much more to the dada-class return object than this (see help("dada-class") for some info), including multiple diagnostics about the quality of each denoised sequence variant, but that is beyond the scope of an introductory tutorial.
+
+## Merge reads
+
+We now merge the forward and reverse reads together to obtain the full denoised sequences. Merging is performed by aligning the denoised forward reads with the reverse-complement of the corresponding denoised reverse reads, and then constructing the merged “contig” sequences. By default, merged sequences are only output if the forward and reverse reads overlap by at least 12 bases, and are identical to each other in the overlap region (but these conditions can be changed via function arguments).
+
+```{r}
+merged <- mergePairs(dadaFs, ffilt, dadaRs, rfilt, verbose = TRUE)
+# Inspect the merger data.frame from the first sample
+head(merged[[1]])
+```
+
+The `merged` object is a list of data.frames from each sample. Each data.frame contains the merged `$sequence`, its `$abundance`, and the indices of the `$forward` and `$reverse` sequence variants that were merged. Paired reads that did not exactly overlap were removed by `mergePairs`, further reducing spurious output.
+
+**Considerations**: Most of your reads should successully merge.If that is not the case upstream parameters may need to be revisited: Did you trim away the overlap between your reads?
+
+## Construct sequence table
+
+We can now construct an amplicon sequence variant table (ASV) table, a higher-resolution version of the OTU table produced by traditional methods.
+
+```{r}
+seqtab <- makeSequenceTable(merged)
+dim(seqtab)
+
+# Inspect distribution of sequence lengths
+table(nchar(getSequences(seqtab)))
+```
+
+The sequence table is a matrix with rows corresponding to (and named by) the samples, and columns corresponding to (and named by) the sequence variants.
+
+### Exercise
+
+Are these sequences the length that you expect? How are the reads concentrated in the merged sequence lengths? Plot the distribution of sequence lengths to explore.
+
+### Exercise
+
+Sequences that are much longer or shorter than expected may be the result of non-specific priming. Remove the non-target-length sequences from your sequence table. This is analogous to “cutting a band” in-silico to get amplicons of the targeted length.
+
+**Hint**. You may find the function `nchar` useful.
+
 

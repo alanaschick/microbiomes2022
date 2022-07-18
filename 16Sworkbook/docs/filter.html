@@ -23,7 +23,7 @@
 <meta name="author" content="Alana Schick" />
 
 
-<meta name="date" content="2022-07-17" />
+<meta name="date" content="2022-07-18" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -170,10 +170,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="4.1" data-path="filter.html"><a href="filter.html#inspect"><i class="fa fa-check"></i><b>4.1</b> Inspect</a>
 <ul>
 <li class="chapter" data-level="4.1.1" data-path="filter.html"><a href="filter.html#exercise-1"><i class="fa fa-check"></i><b>4.1.1</b> Exercise</a></li>
+<li class="chapter" data-level="4.1.2" data-path="filter.html"><a href="filter.html#exercise-2"><i class="fa fa-check"></i><b>4.1.2</b> Exercise</a></li>
 </ul></li>
 <li class="chapter" data-level="4.2" data-path="filter.html"><a href="filter.html#filter-and-trim"><i class="fa fa-check"></i><b>4.2</b> Filter and Trim</a>
 <ul>
-<li class="chapter" data-level="4.2.1" data-path="filter.html"><a href="filter.html#exercise-2"><i class="fa fa-check"></i><b>4.2.1</b> Exercise</a></li>
+<li class="chapter" data-level="4.2.1" data-path="filter.html"><a href="filter.html#exercise-3"><i class="fa fa-check"></i><b>4.2.1</b> Exercise</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="denoise.html"><a href="denoise.html"><i class="fa fa-check"></i><b>5</b> Denoise</a></li>
@@ -203,56 +204,56 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2><span class="header-section-number">4.1</span> Inspect<a href="filter.html#inspect" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>We begin by inspecting the quality profiles:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="filter.html#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plotQualityProfile</span>(ftrim[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>])</span></code></pre></div>
-<pre><code>## Warning: `guides(&lt;scale&gt; = FALSE)` is deprecated. Please use `guides(&lt;scale&gt; =
-## &quot;none&quot;)` instead.</code></pre>
 <p><img src="16Sworkbook_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
 <p>In gray-scale is a heat map of the frequency of each quality score at each base position. The mean quality score at each position is shown by the green line, and the quartiles of the quality score distribution by the orange lines. The red line shows the scaled proportion of reads that extend to at least that position (this is more useful for other sequencing technologies, as Illumina reads are typically all the same length, hence the flat red line).</p>
 <p>The forward reads are good quality. We generally advise trimming the last few nucleotides to avoid less well-controlled errors that can arise there. These quality profiles do not suggest that any additional trimming is needed. We will truncate the forward reads at position 240 (trimming the last 10 nucleotides).</p>
 <p>Now we visualize the quality profile of the reverse reads:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="filter.html#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plotQualityProfile</span>(rtrim[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>])</span></code></pre></div>
-<pre><code>## Warning: `guides(&lt;scale&gt; = FALSE)` is deprecated. Please use `guides(&lt;scale&gt; =
-## &quot;none&quot;)` instead.</code></pre>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="filter.html#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plotQualityProfile</span>(rtrim[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>])</span></code></pre></div>
 <p><img src="16Sworkbook_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
 <p>The reverse reads are of significantly worse quality, especially at the end, which is common in Illumina sequencing. This isn’t too worrisome, as DADA2 incorporates quality information into its error model which makes the algorithm robust to lower quality sequence, but trimming as the average qualities crash will improve the algorithm’s sensitivity to rare sequence variants. Based on these profiles, we will truncate the reverse reads at position 160 where the quality distribution crashes.</p>
 <p><strong>IMPORTANT</strong> Your reads must still overlap after truncation in order to merge them later!</p>
 <div id="exercise-1" class="section level3 hasAnchor" number="4.1.1">
 <h3><span class="header-section-number">4.1.1</span> Exercise<a href="filter.html#exercise-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Plot the quality profiles of several more samples. What do you see?</p>
+</div>
+<div id="exercise-2" class="section level3 hasAnchor" number="4.1.2">
+<h3><span class="header-section-number">4.1.2</span> Exercise<a href="filter.html#exercise-2" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Based on the expected size of the amplicon, what is the minimum truncation length that would still leave about 30 nucleotides of overlap?</p>
 </div>
 </div>
 <div id="filter-and-trim" class="section level2 hasAnchor" number="4.2">
 <h2><span class="header-section-number">4.2</span> Filter and Trim<a href="filter.html#filter-and-trim" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Assign the filenames for the filtered files:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="filter.html#cb5-1" aria-hidden="true" tabindex="-1"></a>ffilt <span class="ot">&lt;-</span> <span class="fu">file.path</span>(path, <span class="st">&quot;filtered&quot;</span>, <span class="fu">paste0</span>(<span class="fu">basename</span>(sample.names), <span class="st">&quot;_F_filtered.fastq.gz&quot;</span>))</span>
-<span id="cb5-2"><a href="filter.html#cb5-2" aria-hidden="true" tabindex="-1"></a>rfilt <span class="ot">&lt;-</span> <span class="fu">file.path</span>(path, <span class="st">&quot;filtered&quot;</span>, <span class="fu">paste0</span>(<span class="fu">basename</span>(sample.names), <span class="st">&quot;_R_filtered.fastq.gz&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="filter.html#cb3-1" aria-hidden="true" tabindex="-1"></a>ffilt <span class="ot">&lt;-</span> <span class="fu">file.path</span>(path, <span class="st">&quot;filtered&quot;</span>, <span class="fu">paste0</span>(<span class="fu">basename</span>(sample.names), <span class="st">&quot;_F_filtered.fastq.gz&quot;</span>))</span>
+<span id="cb3-2"><a href="filter.html#cb3-2" aria-hidden="true" tabindex="-1"></a>rfilt <span class="ot">&lt;-</span> <span class="fu">file.path</span>(path, <span class="st">&quot;filtered&quot;</span>, <span class="fu">paste0</span>(<span class="fu">basename</span>(sample.names), <span class="st">&quot;_R_filtered.fastq.gz&quot;</span>))</span></code></pre></div>
 <p>We’ll use standard filtering parameters: <code>maxN=0</code> (DADA2 requires no Ns), <code>truncQ=2</code>, <code>rm.phix=TRUE</code> and <code>maxEE=2</code>. The maxEE parameter sets the maximum number of “expected errors” allowed in a read, which is a better filter than simply averaging quality scores.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="filter.html#cb6-1" aria-hidden="true" tabindex="-1"></a>out <span class="ot">&lt;-</span> <span class="fu">filterAndTrim</span>(ftrim, ffilt, rtrim, rfilt, </span>
-<span id="cb6-2"><a href="filter.html#cb6-2" aria-hidden="true" tabindex="-1"></a>                     <span class="at">truncLen=</span><span class="fu">c</span>(<span class="dv">240</span>,<span class="dv">160</span>),</span>
-<span id="cb6-3"><a href="filter.html#cb6-3" aria-hidden="true" tabindex="-1"></a>                     <span class="at">maxN=</span><span class="dv">0</span>, </span>
-<span id="cb6-4"><a href="filter.html#cb6-4" aria-hidden="true" tabindex="-1"></a>                     <span class="at">maxEE=</span><span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>), </span>
-<span id="cb6-5"><a href="filter.html#cb6-5" aria-hidden="true" tabindex="-1"></a>                     <span class="at">truncQ=</span><span class="dv">2</span>, </span>
-<span id="cb6-6"><a href="filter.html#cb6-6" aria-hidden="true" tabindex="-1"></a>                     <span class="at">rm.phix=</span><span class="cn">TRUE</span>,</span>
-<span id="cb6-7"><a href="filter.html#cb6-7" aria-hidden="true" tabindex="-1"></a>                     <span class="at">compress=</span><span class="cn">TRUE</span>, </span>
-<span id="cb6-8"><a href="filter.html#cb6-8" aria-hidden="true" tabindex="-1"></a>                     <span class="at">multithread=</span><span class="cn">TRUE</span>,</span>
-<span id="cb6-9"><a href="filter.html#cb6-9" aria-hidden="true" tabindex="-1"></a>                     <span class="at">matchIDs=</span><span class="cn">TRUE</span>) <span class="co"># On Windows set multithread=FALSE</span></span>
-<span id="cb6-10"><a href="filter.html#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(out)</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="filter.html#cb4-1" aria-hidden="true" tabindex="-1"></a>out <span class="ot">&lt;-</span> <span class="fu">filterAndTrim</span>(ftrim, ffilt, rtrim, rfilt, </span>
+<span id="cb4-2"><a href="filter.html#cb4-2" aria-hidden="true" tabindex="-1"></a>                     <span class="at">truncLen=</span><span class="fu">c</span>(<span class="dv">260</span>,<span class="dv">220</span>),</span>
+<span id="cb4-3"><a href="filter.html#cb4-3" aria-hidden="true" tabindex="-1"></a>                     <span class="at">maxN=</span><span class="dv">0</span>, </span>
+<span id="cb4-4"><a href="filter.html#cb4-4" aria-hidden="true" tabindex="-1"></a>                     <span class="at">maxEE=</span><span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>), </span>
+<span id="cb4-5"><a href="filter.html#cb4-5" aria-hidden="true" tabindex="-1"></a>                     <span class="at">truncQ=</span><span class="dv">2</span>, </span>
+<span id="cb4-6"><a href="filter.html#cb4-6" aria-hidden="true" tabindex="-1"></a>                     <span class="at">rm.phix=</span><span class="cn">TRUE</span>,</span>
+<span id="cb4-7"><a href="filter.html#cb4-7" aria-hidden="true" tabindex="-1"></a>                     <span class="at">compress=</span><span class="cn">TRUE</span>, </span>
+<span id="cb4-8"><a href="filter.html#cb4-8" aria-hidden="true" tabindex="-1"></a>                     <span class="at">multithread=</span><span class="cn">TRUE</span>,</span>
+<span id="cb4-9"><a href="filter.html#cb4-9" aria-hidden="true" tabindex="-1"></a>                     <span class="at">matchIDs=</span><span class="cn">TRUE</span>) <span class="co"># On Windows set multithread=FALSE</span></span>
+<span id="cb4-10"><a href="filter.html#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(out)</span></code></pre></div>
 <pre><code>##                                   reads.in reads.out
-## 01MP-1_S1_L001_F_trimmed.fastq.gz    92517     76406
-## 01MP-2_S2_L001_F_trimmed.fastq.gz    99092     79988
-## 01MP-3_S3_L001_F_trimmed.fastq.gz    95994     80218
-## 03KW-1_S4_L001_F_trimmed.fastq.gz   111386     91413
-## 03KW-2_S5_L001_F_trimmed.fastq.gz    82113     68925
-## 03KW-3_S6_L001_F_trimmed.fastq.gz   123229     99956</code></pre>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="filter.html#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Save output</span></span>
-<span id="cb8-2"><a href="filter.html#cb8-2" aria-hidden="true" tabindex="-1"></a>path <span class="ot">&lt;-</span> <span class="st">&quot;~/Desktop/microbiomeworkshop2022/results&quot;</span></span>
-<span id="cb8-3"><a href="filter.html#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(out, <span class="fu">file.path</span>(path, <span class="st">&quot;filt_out.rds&quot;</span>))</span></code></pre></div>
+## 01MP-1_S1_L001_F_trimmed.fastq.gz    92517     66965
+## 01MP-2_S2_L001_F_trimmed.fastq.gz    99092     68750
+## 01MP-3_S3_L001_F_trimmed.fastq.gz    95994     68855
+## 03KW-1_S4_L001_F_trimmed.fastq.gz   111386     80588
+## 03KW-2_S5_L001_F_trimmed.fastq.gz    82113     61147
+## 03KW-3_S6_L001_F_trimmed.fastq.gz   123229     88500</code></pre>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="filter.html#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Save output</span></span>
+<span id="cb6-2"><a href="filter.html#cb6-2" aria-hidden="true" tabindex="-1"></a>path <span class="ot">&lt;-</span> <span class="st">&quot;~/Desktop/microbiomeworkshop2022/results&quot;</span></span>
+<span id="cb6-3"><a href="filter.html#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(out, <span class="fu">file.path</span>(path, <span class="st">&quot;filt_out.rds&quot;</span>))</span></code></pre></div>
 <p>Considerations for your own data:</p>
 <p>The filtering parameters are starting points, not set in stone.</p>
-<p>If you want to speed up downstream computation, consider tightening maxEE.</p>
-<p>If too few reads are passing the filter, consider relaxing maxEE, perhaps especially on the reverse reads (eg. maxEE=c(2,5)), and reducing the truncLen to remove low quality tails.</p>
+<p>If you want to speed up downstream computation, consider tightening <code>maxEE</code>.</p>
+<p>If too few reads are passing the filter, consider relaxing <code>maxEE</code>, perhaps especially on the reverse reads (eg. <code>maxEE=c(2,5))</code>, and reducing the <code>truncLen</code> to remove low quality tails.</p>
 <p>Remember though, when choosing truncLen for paired-end reads you must maintain overlap after truncation in order to merge them later.</p>
-<div id="exercise-2" class="section level3 hasAnchor" number="4.2.1">
-<h3><span class="header-section-number">4.2.1</span> Exercise<a href="filter.html#exercise-2" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="exercise-3" class="section level3 hasAnchor" number="4.2.1">
+<h3><span class="header-section-number">4.2.1</span> Exercise<a href="filter.html#exercise-3" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Determine what you think the optimal filtering parameters should be for this dataset.</p>
 
 </div>

@@ -33,3 +33,11 @@ filter-and-trim
 exercise-2
 filter-1
 denoise
+exercise-3
+learn-the-error-rates
+dereplicate
+sample-inference
+merge-reads
+construct-sequence-table
+exercise-4
+exercise-5
