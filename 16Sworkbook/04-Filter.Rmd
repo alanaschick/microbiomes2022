@@ -2,8 +2,7 @@
 library(dada2)
 library(tidyverse)
 library(phyloseq)
-library(Biostrings)
-library(ShortRead)
+
 
 path <- "~/Desktop/microbiomeworkshop2022/rawdata"
 
