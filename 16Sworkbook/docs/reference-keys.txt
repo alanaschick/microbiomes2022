@@ -41,3 +41,4 @@ merge-reads
 construct-sequence-table
 exercise-4
 exercise-5
+exploring-parameters

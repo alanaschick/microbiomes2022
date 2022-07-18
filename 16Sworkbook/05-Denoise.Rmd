@@ -14,6 +14,7 @@ ffilt <- file.path(path, "filtered", paste0(basename(sample.names), "_F_filtered
 rfilt <- file.path(path, "filtered", paste0(basename(sample.names), "_R_filtered.fastq.gz"))
 
 path <- "~/Desktop/microbiomeworkshop2022/results"
+out <- readRDS(file.path(path, "filt_out.rds"))
 ```
 
 # Denoise
@@ -91,12 +92,89 @@ The sequence table is a matrix with rows corresponding to (and named by) the sam
 
 ### Exercise
 
-Are these sequences the length that you expect? How are the reads concentrated in the merged sequence lengths? Plot the distribution of sequence lengths to explore.
+Are these sequences the length that you expect? How are the reads concentrated in the merged sequence lengths? Plot the distribution of sequence lengths to explore. Something like the plot shown below.
+
+```{r, echo = FALSE}
+readsbyseqlen <- tapply(colSums(seqtab), nchar(colnames(seqtab)),sum)
+plot(as.integer(names(readsbyseqlen)),readsbyseqlen, xlab = "Merged length", ylab = "Total reads")
+```
 
 ### Exercise
 
 Sequences that are much longer or shorter than expected may be the result of non-specific priming. Remove the non-target-length sequences from your sequence table. This is analogous to “cutting a band” in-silico to get amplicons of the targeted length.
 
-**Hint**. You may find the function `nchar` useful.
+```{r, echo = FALSE}
+#seqtab <- seqtab[,nchar(colnames(seqtab)) %in% 250:256]
+```
+
+After size selection:
+
+```{r}
+dim(seqtab)
+table(nchar(getSequences(seqtab)))
+```
+
+## Remove Chimeras
+
+The core dada method corrects substitution and indel errors, but chimeras remain. Fortunately, the accuracy of sequence variants after denoising makes identifying chimeric ASVs simpler than when dealing with fuzzy OTUs. Chimeric sequences are identified if they can be exactly reconstructed by combining a left-segment and a right-segment from two more abundant “parent” sequences.
+
+```{r}
+seqtab.nochim <- removeBimeraDenovo(seqtab, 
+                                    method="consensus", 
+                                    multithread=TRUE, 
+                                    verbose=TRUE)
+dim(seqtab.nochim)
+sum(seqtab.nochim)/sum(seqtab)
+```
+
+The frequency of chimeric sequences varies substantially from dataset to dataset, and depends on on factors including experimental procedures and sample complexity.
+
+**Consideration**: Most of your reads should remain after chimera removal (it is not uncommon for a majority of sequence variants to be removed though). If most of your reads were removed as chimeric, upstream processing may need to be revisited. In almost all cases this is caused by primer sequences with ambiguous nucleotides that were not removed prior to beginning the DADA2 pipeline.
+ 
+## Track reads through the pipeline
+
+As a final check of our progress, we’ll look at the number of reads that made it through each step in the pipeline:
+
+```{r}
+getN <- function(x) sum (getUniques(x))
+summary_tab <- data.frame(row.names=basename(sample.names), 
+                          Input=out[,1], 
+                          Filtered=out[,2],
+                          Denoised=sapply(dadaF, getN), 
+                          Merged=sapply(merged, getN), 
+                          Non.Chimeric=rowSums(seqtab.nochim), 
+                          Total.Perc.Remaining = round(rowSums(seqtab.nochim)/out[,1]*100 ,1))
+
+
+## Write this table to output
+write.table(summary_tab, file.path(path, "reads_tracked.txt"))
+```
+
+### Exercise
+
+Make a plot to visualize the results in `reads_tracked.txt`. Something like this:
+
+```{r, echo = FALSE}
+summary_tab$Sample <- rownames(summary_tab) 
+summary_tab <- summary_tab %>% separate(Sample, c("Sample", "temp"), sep = "_S") 
+summary_tab$Sample <- factor(summary_tab$Sample, levels = summary_tab$Sample[order(summary_tab$Non.Chimeric)])
+summary_tab_long <- summary_tab %>% gather("QC.Step", "Reads", Input:Non.Chimeric)
+summary_tab_long$QC.Step <- factor(summary_tab_long$QC.Step, levels = c("Input", "Filtered", "Denoised", "Merged", "Non.Chimeric"))
+
+
+gg <- ggplot(summary_tab_long, aes(x = Sample, y = Reads, color = QC.Step)) +
+	geom_point(size = 2) +
+	scale_color_manual(values = rainbow(5, v = 0.8)) +
+	theme_bw() +
+	theme(axis.text.x = element_text(angle = 90))
+gg
+```
+
+# Assign Taxonomy
+
+We will use the function `assignTaxonony` to assign taxonomy to the sequence variants. This function takes as input a set of sequences to be classified and a training set of reference sequences with known taxonomy, and outputs taxonomic assignment with at least `minBoot` bootstrap confidence. 
+
+
+
 
 

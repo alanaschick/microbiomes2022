@@ -64,7 +64,7 @@ We’ll use standard filtering parameters: `maxN=0` (DADA2 requires no Ns), `tru
 out <- filterAndTrim(ftrim, ffilt, rtrim, rfilt, 
                      truncLen=c(280,260),
                      maxN=0, 
-                     maxEE=c(2,2), 
+                     maxEE=c(3,5), 
                      truncQ=2, 
                      rm.phix=TRUE,
                      compress=TRUE, 
@@ -93,7 +93,7 @@ Determine what you think the optimal filtering parameters should be for this dat
 
 ## Exploring parameters
 
-```{r, echo = FALSE}
+```{r, echo = FALSE, warning = FALSE}
 
 ## Explore truncation parameters
 results <- NULL
