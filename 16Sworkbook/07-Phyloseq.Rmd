@@ -1,0 +1,69 @@
+```{r setup7, include=FALSE} 
+library(dada2)
+library(tidyverse)
+library(phyloseq)
+
+```
+
+# Phyloseq
+
+The phyloseq R package is a powerful framework for further analysis of microbiome data. We now demonstrate how to straightforwardly import the tables produced by the `dada2` pipeline into phyloseq. 
+
+## Import
+
+```{r}
+path <- "~/Desktop/microbiomeworkshop2022/"
+
+
+## Read in files
+seqtab <- readRDS(file.path(path, "results/seqtab_final.rds"))
+taxa <- readRDS(file.path(path, "results/taxa_final.rds"))
+```
+
+### Exercise
+
+1. Read the metadata file into R, called `info`. 
+
+2. Phyloseq needs the rownames of the metadata to match the sample names. How can you accomplish this? 
+
+```{r, echo = FALSE}
+info <- read.table(file.path(path, "project_metadata.txt"), header = TRUE)
+
+## Name rows after Sample ID
+rownames(info) <- info$SampleID
+```
+
+Make a phyloseq object:
+
+```{r}
+ps <- phyloseq(otu_table(seqtab, taxa_are_rows=FALSE), sample_data(info), tax_table(taxa))
+ps
+```
+
+In order to look at the ASVs, we need to remove the sequences.
+
+```{r}
+## Remove sequence names, rename to something manageable
+asv_names <- vector(dim(otu_table(ps))[2], mode = "character")
+for (i in 1:dim(otu_table(ps))[2]){
+	asv_names[i] <- paste("ASV", i, sep = "_")
+}
+taxa_names(ps) <- asv_names
+colnames(otu_table(ps)) <- asv_names
+rownames(tax_table(ps)) <- asv_names
+```
+
+You can see that the phyloseq object has an `otu_table`(ASV table), `sample_data` and `tax_table`. You can use functions `tax_table()`, `sample_data()` and `otu_table()` to access the data.
+
+### Exercise
+
+Take a look the following functions and find out what they do:
+- subset_samples()
+- subset_taxa()
+- tax_glom()
+- sample_sums()
+- prune_samples()
+- transform_sample_counts()
+- psmelt()
+
+## Preprocess

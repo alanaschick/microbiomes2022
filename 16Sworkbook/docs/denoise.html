@@ -31,7 +31,7 @@
   
   
 <link rel="prev" href="filter.html"/>
-
+<link rel="next" href="assign-taxonomy.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -176,6 +176,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="4.2.1" data-path="filter.html"><a href="filter.html#exercise-3"><i class="fa fa-check"></i><b>4.2.1</b> Exercise</a></li>
 </ul></li>
+<li class="chapter" data-level="4.3" data-path="filter.html"><a href="filter.html#exploring-parameters"><i class="fa fa-check"></i><b>4.3</b> Exploring parameters</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="denoise.html"><a href="denoise.html"><i class="fa fa-check"></i><b>5</b> Denoise</a>
 <ul>
@@ -188,6 +189,24 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="5.5.1" data-path="denoise.html"><a href="denoise.html#exercise-4"><i class="fa fa-check"></i><b>5.5.1</b> Exercise</a></li>
 <li class="chapter" data-level="5.5.2" data-path="denoise.html"><a href="denoise.html#exercise-5"><i class="fa fa-check"></i><b>5.5.2</b> Exercise</a></li>
 </ul></li>
+<li class="chapter" data-level="5.6" data-path="denoise.html"><a href="denoise.html#remove-chimeras"><i class="fa fa-check"></i><b>5.6</b> Remove Chimeras</a></li>
+<li class="chapter" data-level="5.7" data-path="denoise.html"><a href="denoise.html#track-reads-through-the-pipeline"><i class="fa fa-check"></i><b>5.7</b> Track reads through the pipeline</a>
+<ul>
+<li class="chapter" data-level="5.7.1" data-path="denoise.html"><a href="denoise.html#exercise-6"><i class="fa fa-check"></i><b>5.7.1</b> Exercise</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="assign-taxonomy.html"><a href="assign-taxonomy.html"><i class="fa fa-check"></i><b>6</b> Assign Taxonomy</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="assign-taxonomy.html"><a href="assign-taxonomy.html#download-the-database"><i class="fa fa-check"></i><b>6.1</b> Download the database</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="phyloseq.html"><a href="phyloseq.html"><i class="fa fa-check"></i><b>7</b> Phyloseq</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="phyloseq.html"><a href="phyloseq.html#import"><i class="fa fa-check"></i><b>7.1</b> Import</a>
+<ul>
+<li class="chapter" data-level="7.1.1" data-path="phyloseq.html"><a href="phyloseq.html#exercise-7"><i class="fa fa-check"></i><b>7.1.1</b> Exercise</a></li>
+<li class="chapter" data-level="7.1.2" data-path="phyloseq.html"><a href="phyloseq.html#exercise-8"><i class="fa fa-check"></i><b>7.1.2</b> Exercise</a></li>
+</ul></li>
+<li class="chapter" data-level="7.2" data-path="phyloseq.html"><a href="phyloseq.html#preprocess"><i class="fa fa-check"></i><b>7.2</b> Preprocess</a></li>
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -214,154 +233,197 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>The <code>DADA2</code> algorithm makes use of a parametric error model (<code>err</code>) and every amplicon dataset has a different set of error rates. The <code>learnErrors</code> method learns this error model from the data, by alternating estimation of the error rates and inference of sample composition until they converge on a jointly consistent solution. As in many machine-learning problems, the algorithm must begin with an initial guess, for which the maximum possible error rates in this data are used (the error rates if only the most abundant sequence is correct and all the rest are errors).</p>
 <div id="learn-the-error-rates" class="section level2 hasAnchor" number="5.1">
 <h2><span class="header-section-number">5.1</span> Learn the Error Rates<a href="denoise.html#learn-the-error-rates" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>Note: this is the most computationally intensive part of the process. Depending on your computer, this could take a while.</p>
+<p>Note: this is the most computationally intensive part of the <code>dada2</code> pipeline. Depending on your computer, this could take a while.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="denoise.html#cb1-1" aria-hidden="true" tabindex="-1"></a>errF <span class="ot">&lt;-</span> <span class="fu">learnErrors</span>(ffilt, <span class="at">multithread =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
-<pre><code>## 113049300 total bases in 434805 reads from 6 samples will be used for learning the error rates.</code></pre>
+<pre><code>## 108882480 total bases in 388866 reads from 5 samples will be used for learning the error rates.</code></pre>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="denoise.html#cb3-1" aria-hidden="true" tabindex="-1"></a>errR <span class="ot">&lt;-</span> <span class="fu">learnErrors</span>(rfilt, <span class="at">multithread =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
-<pre><code>## 110833580 total bases in 503789 reads from 7 samples will be used for learning the error rates.</code></pre>
+<pre><code>## 120679000 total bases in 482716 reads from 6 samples will be used for learning the error rates.</code></pre>
 <p>Visualize the estimated error rates:</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="denoise.html#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plotErrors</span>(errF, <span class="at">nominalQ =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
-<pre><code>## Warning: Transformation introduced infinite values in continuous y-axis</code></pre>
 <p><img src="16Sworkbook_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
 <p>The error rates for each possible transition (A→C, A→G, …) are shown. Points are the observed error rates for each consensus quality score. The black line shows the estimated error rates after convergence of the machine-learning algorithm. The red line shows the error rates expected under the nominal definition of the Q-score. Here the estimated error rates (black line) are a good fit to the observed rates (points), and the error rates drop with increased quality as expected. Everything looks reasonable and we proceed with confidence.</p>
 </div>
 <div id="dereplicate" class="section level2 hasAnchor" number="5.2">
 <h2><span class="header-section-number">5.2</span> Dereplicate<a href="denoise.html#dereplicate" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="denoise.html#cb7-1" aria-hidden="true" tabindex="-1"></a>derep_forward <span class="ot">&lt;-</span> <span class="fu">derepFastq</span>(ffilt)</span>
-<span id="cb7-2"><a href="denoise.html#cb7-2" aria-hidden="true" tabindex="-1"></a>derep_reverse <span class="ot">&lt;-</span> <span class="fu">derepFastq</span>(rfilt)</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="denoise.html#cb6-1" aria-hidden="true" tabindex="-1"></a>derep_forward <span class="ot">&lt;-</span> <span class="fu">derepFastq</span>(ffilt)</span>
+<span id="cb6-2"><a href="denoise.html#cb6-2" aria-hidden="true" tabindex="-1"></a>derep_reverse <span class="ot">&lt;-</span> <span class="fu">derepFastq</span>(rfilt)</span></code></pre></div>
 </div>
 <div id="sample-inference" class="section level2 hasAnchor" number="5.3">
 <h2><span class="header-section-number">5.3</span> Sample Inference<a href="denoise.html#sample-inference" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>We are now ready to apply the core sample inference algorithm to the filtered and trimmed sequence data.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="denoise.html#cb8-1" aria-hidden="true" tabindex="-1"></a>dadaFs <span class="ot">&lt;-</span> <span class="fu">dada</span>(derep_forward, <span class="at">err =</span> errF, <span class="at">multithread =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
-<pre><code>## Sample 1 - 66965 reads in 14499 unique sequences.
-## Sample 2 - 68750 reads in 14269 unique sequences.
-## Sample 3 - 68855 reads in 14142 unique sequences.
-## Sample 4 - 80588 reads in 18364 unique sequences.
-## Sample 5 - 61147 reads in 13962 unique sequences.
-## Sample 6 - 88500 reads in 19081 unique sequences.
-## Sample 7 - 68984 reads in 16567 unique sequences.
-## Sample 8 - 95488 reads in 21378 unique sequences.
-## Sample 9 - 55776 reads in 13093 unique sequences.
-## Sample 10 - 61165 reads in 12912 unique sequences.
-## Sample 11 - 55911 reads in 11642 unique sequences.
-## Sample 12 - 67328 reads in 13655 unique sequences.
-## Sample 13 - 55394 reads in 12090 unique sequences.
-## Sample 14 - 78256 reads in 15288 unique sequences.
-## Sample 15 - 82424 reads in 17243 unique sequences.
-## Sample 16 - 61222 reads in 14529 unique sequences.
-## Sample 17 - 50479 reads in 11478 unique sequences.
-## Sample 18 - 61237 reads in 14215 unique sequences.
-## Sample 19 - 67882 reads in 16006 unique sequences.
-## Sample 20 - 67074 reads in 16233 unique sequences.
-## Sample 21 - 51295 reads in 12722 unique sequences.
-## Sample 22 - 68261 reads in 16104 unique sequences.
-## Sample 23 - 67814 reads in 15683 unique sequences.
-## Sample 24 - 71740 reads in 16231 unique sequences.</code></pre>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="denoise.html#cb10-1" aria-hidden="true" tabindex="-1"></a>dadaRs <span class="ot">&lt;-</span> <span class="fu">dada</span>(derep_reverse, <span class="at">err =</span> errR, <span class="at">multithread =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
-<pre><code>## Sample 1 - 66965 reads in 16528 unique sequences.
-## Sample 2 - 68750 reads in 16290 unique sequences.
-## Sample 3 - 68855 reads in 16803 unique sequences.
-## Sample 4 - 80588 reads in 21091 unique sequences.
-## Sample 5 - 61147 reads in 15582 unique sequences.
-## Sample 6 - 88500 reads in 21283 unique sequences.
-## Sample 7 - 68984 reads in 18220 unique sequences.
-## Sample 8 - 95488 reads in 24393 unique sequences.
-## Sample 9 - 55776 reads in 15098 unique sequences.
-## Sample 10 - 61165 reads in 14811 unique sequences.
-## Sample 11 - 55911 reads in 14330 unique sequences.
-## Sample 12 - 67328 reads in 17202 unique sequences.
-## Sample 13 - 55394 reads in 13884 unique sequences.
-## Sample 14 - 78256 reads in 17193 unique sequences.
-## Sample 15 - 82424 reads in 17945 unique sequences.
-## Sample 16 - 61222 reads in 19543 unique sequences.
-## Sample 17 - 50479 reads in 13027 unique sequences.
-## Sample 18 - 61237 reads in 14767 unique sequences.
-## Sample 19 - 67882 reads in 18135 unique sequences.
-## Sample 20 - 67074 reads in 17371 unique sequences.
-## Sample 21 - 51295 reads in 14546 unique sequences.
-## Sample 22 - 68261 reads in 18187 unique sequences.
-## Sample 23 - 67814 reads in 17825 unique sequences.
-## Sample 24 - 71740 reads in 18933 unique sequences.</code></pre>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="denoise.html#cb7-1" aria-hidden="true" tabindex="-1"></a>dadaFs <span class="ot">&lt;-</span> <span class="fu">dada</span>(derep_forward, <span class="at">err =</span> errF, <span class="at">multithread =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<pre><code>## Sample 1 - 75763 reads in 23965 unique sequences.
+## Sample 2 - 78537 reads in 24246 unique sequences.
+## Sample 3 - 78382 reads in 23641 unique sequences.
+## Sample 4 - 91331 reads in 30645 unique sequences.
+## Sample 5 - 64853 reads in 19172 unique sequences.
+## Sample 6 - 93850 reads in 26654 unique sequences.
+## Sample 7 - 72701 reads in 22317 unique sequences.
+## Sample 8 - 101260 reads in 29266 unique sequences.
+## Sample 9 - 58830 reads in 17721 unique sequences.
+## Sample 10 - 64962 reads in 18193 unique sequences.
+## Sample 11 - 60386 reads in 16520 unique sequences.
+## Sample 12 - 73305 reads in 19548 unique sequences.
+## Sample 13 - 58572 reads in 16598 unique sequences.
+## Sample 14 - 82501 reads in 21703 unique sequences.
+## Sample 15 - 86439 reads in 23852 unique sequences.
+## Sample 16 - 68778 reads in 21604 unique sequences.
+## Sample 17 - 54017 reads in 15834 unique sequences.
+## Sample 18 - 64712 reads in 19398 unique sequences.
+## Sample 19 - 71804 reads in 21588 unique sequences.
+## Sample 20 - 70809 reads in 21952 unique sequences.
+## Sample 21 - 54520 reads in 17251 unique sequences.
+## Sample 22 - 72728 reads in 22303 unique sequences.
+## Sample 23 - 71862 reads in 21682 unique sequences.
+## Sample 24 - 76305 reads in 22284 unique sequences.</code></pre>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="denoise.html#cb9-1" aria-hidden="true" tabindex="-1"></a>dadaRs <span class="ot">&lt;-</span> <span class="fu">dada</span>(derep_reverse, <span class="at">err =</span> errR, <span class="at">multithread =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<pre><code>## Sample 1 - 75763 reads in 33516 unique sequences.
+## Sample 2 - 78537 reads in 34824 unique sequences.
+## Sample 3 - 78382 reads in 35233 unique sequences.
+## Sample 4 - 91331 reads in 42668 unique sequences.
+## Sample 5 - 64853 reads in 27773 unique sequences.
+## Sample 6 - 93850 reads in 38981 unique sequences.
+## Sample 7 - 72701 reads in 30831 unique sequences.
+## Sample 8 - 101260 reads in 42677 unique sequences.
+## Sample 9 - 58830 reads in 25258 unique sequences.
+## Sample 10 - 64962 reads in 26754 unique sequences.
+## Sample 11 - 60386 reads in 26904 unique sequences.
+## Sample 12 - 73305 reads in 32839 unique sequences.
+## Sample 13 - 58572 reads in 24460 unique sequences.
+## Sample 14 - 82501 reads in 30877 unique sequences.
+## Sample 15 - 86439 reads in 32166 unique sequences.
+## Sample 16 - 68778 reads in 38340 unique sequences.
+## Sample 17 - 54017 reads in 23660 unique sequences.
+## Sample 18 - 64712 reads in 26271 unique sequences.
+## Sample 19 - 71804 reads in 31037 unique sequences.
+## Sample 20 - 70809 reads in 29785 unique sequences.
+## Sample 21 - 54520 reads in 24771 unique sequences.
+## Sample 22 - 72728 reads in 32587 unique sequences.
+## Sample 23 - 71862 reads in 31038 unique sequences.
+## Sample 24 - 76305 reads in 33480 unique sequences.</code></pre>
 <p>Inspecting the returned dada-class object:</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="denoise.html#cb12-1" aria-hidden="true" tabindex="-1"></a>dadaFs[[<span class="dv">1</span>]]</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="denoise.html#cb11-1" aria-hidden="true" tabindex="-1"></a>dadaFs[[<span class="dv">1</span>]]</span></code></pre></div>
 <pre><code>## dada-class: object describing DADA2 denoising results
-## 411 sequence variants were inferred from 14499 input unique sequences.
+## 454 sequence variants were inferred from 23965 input unique sequences.
 ## Key parameters: OMEGA_A = 1e-40, OMEGA_C = 1e-40, BAND_SIZE = 16</code></pre>
 <p>There is much more to the dada-class return object than this (see help(“dada-class”) for some info), including multiple diagnostics about the quality of each denoised sequence variant, but that is beyond the scope of an introductory tutorial.</p>
 </div>
 <div id="merge-reads" class="section level2 hasAnchor" number="5.4">
 <h2><span class="header-section-number">5.4</span> Merge reads<a href="denoise.html#merge-reads" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>We now merge the forward and reverse reads together to obtain the full denoised sequences. Merging is performed by aligning the denoised forward reads with the reverse-complement of the corresponding denoised reverse reads, and then constructing the merged “contig” sequences. By default, merged sequences are only output if the forward and reverse reads overlap by at least 12 bases, and are identical to each other in the overlap region (but these conditions can be changed via function arguments).</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="denoise.html#cb14-1" aria-hidden="true" tabindex="-1"></a>merged <span class="ot">&lt;-</span> <span class="fu">mergePairs</span>(dadaFs, ffilt, dadaRs, rfilt, <span class="at">verbose =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
-<pre><code>## 63415 paired-reads (in 621 unique pairings) successfully merged out of 65217 (in 1599 pairings) input.</code></pre>
-<pre><code>## 65294 paired-reads (in 653 unique pairings) successfully merged out of 67067 (in 1548 pairings) input.</code></pre>
-<pre><code>## 65507 paired-reads (in 676 unique pairings) successfully merged out of 67342 (in 1676 pairings) input.</code></pre>
-<pre><code>## 75663 paired-reads (in 700 unique pairings) successfully merged out of 78383 (in 1997 pairings) input.</code></pre>
-<pre><code>## 57711 paired-reads (in 610 unique pairings) successfully merged out of 59547 (in 1484 pairings) input.</code></pre>
-<pre><code>## 83548 paired-reads (in 855 unique pairings) successfully merged out of 86413 (in 2293 pairings) input.</code></pre>
-<pre><code>## 64830 paired-reads (in 662 unique pairings) successfully merged out of 67115 (in 1810 pairings) input.</code></pre>
-<pre><code>## 90697 paired-reads (in 720 unique pairings) successfully merged out of 93089 (in 1993 pairings) input.</code></pre>
-<pre><code>## 52380 paired-reads (in 509 unique pairings) successfully merged out of 54093 (in 1426 pairings) input.</code></pre>
-<pre><code>## 58690 paired-reads (in 411 unique pairings) successfully merged out of 60020 (in 1044 pairings) input.</code></pre>
-<pre><code>## 53132 paired-reads (in 515 unique pairings) successfully merged out of 54527 (in 1174 pairings) input.</code></pre>
-<pre><code>## 64551 paired-reads (in 594 unique pairings) successfully merged out of 66050 (in 1290 pairings) input.</code></pre>
-<pre><code>## 52686 paired-reads (in 513 unique pairings) successfully merged out of 54126 (in 1247 pairings) input.</code></pre>
-<pre><code>## 74712 paired-reads (in 549 unique pairings) successfully merged out of 76912 (in 1390 pairings) input.</code></pre>
-<pre><code>## 78767 paired-reads (in 645 unique pairings) successfully merged out of 81018 (in 1645 pairings) input.</code></pre>
-<pre><code>## 57684 paired-reads (in 433 unique pairings) successfully merged out of 59412 (in 1285 pairings) input.</code></pre>
-<pre><code>## 47437 paired-reads (in 519 unique pairings) successfully merged out of 48907 (in 1294 pairings) input.</code></pre>
-<pre><code>## 57818 paired-reads (in 537 unique pairings) successfully merged out of 59462 (in 1410 pairings) input.</code></pre>
-<pre><code>## 63513 paired-reads (in 646 unique pairings) successfully merged out of 65929 (in 1941 pairings) input.</code></pre>
-<pre><code>## 62950 paired-reads (in 772 unique pairings) successfully merged out of 65102 (in 1937 pairings) input.</code></pre>
-<pre><code>## 47747 paired-reads (in 558 unique pairings) successfully merged out of 49575 (in 1570 pairings) input.</code></pre>
-<pre><code>## 64619 paired-reads (in 637 unique pairings) successfully merged out of 66388 (in 1578 pairings) input.</code></pre>
-<pre><code>## 63995 paired-reads (in 565 unique pairings) successfully merged out of 66002 (in 1552 pairings) input.</code></pre>
-<pre><code>## 68111 paired-reads (in 588 unique pairings) successfully merged out of 69645 (in 1428 pairings) input.</code></pre>
-<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="denoise.html#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Inspect the merger data.frame from the first sample</span></span>
-<span id="cb39-2"><a href="denoise.html#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(merged[[<span class="dv">1</span>]])</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="denoise.html#cb13-1" aria-hidden="true" tabindex="-1"></a>merged <span class="ot">&lt;-</span> <span class="fu">mergePairs</span>(dadaFs, ffilt, dadaRs, rfilt, <span class="at">verbose =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<pre><code>## 69784 paired-reads (in 468 unique pairings) successfully merged out of 73514 (in 1419 pairings) input.</code></pre>
+<pre><code>## 72102 paired-reads (in 501 unique pairings) successfully merged out of 76480 (in 1382 pairings) input.</code></pre>
+<pre><code>## 73148 paired-reads (in 532 unique pairings) successfully merged out of 76580 (in 1477 pairings) input.</code></pre>
+<pre><code>## 84900 paired-reads (in 547 unique pairings) successfully merged out of 88398 (in 1699 pairings) input.</code></pre>
+<pre><code>## 59000 paired-reads (in 439 unique pairings) successfully merged out of 62938 (in 1212 pairings) input.</code></pre>
+<pre><code>## 87633 paired-reads (in 624 unique pairings) successfully merged out of 91169 (in 1855 pairings) input.</code></pre>
+<pre><code>## 67915 paired-reads (in 487 unique pairings) successfully merged out of 70405 (in 1434 pairings) input.</code></pre>
+<pre><code>## 95581 paired-reads (in 560 unique pairings) successfully merged out of 98291 (in 1508 pairings) input.</code></pre>
+<pre><code>## 55017 paired-reads (in 403 unique pairings) successfully merged out of 56793 (in 1098 pairings) input.</code></pre>
+<pre><code>## 61538 paired-reads (in 292 unique pairings) successfully merged out of 63540 (in 838 pairings) input.</code></pre>
+<pre><code>## 55905 paired-reads (in 379 unique pairings) successfully merged out of 58724 (in 985 pairings) input.</code></pre>
+<pre><code>## 68455 paired-reads (in 427 unique pairings) successfully merged out of 71673 (in 1076 pairings) input.</code></pre>
+<pre><code>## 53615 paired-reads (in 338 unique pairings) successfully merged out of 56832 (in 977 pairings) input.</code></pre>
+<pre><code>## 76014 paired-reads (in 388 unique pairings) successfully merged out of 80967 (in 1229 pairings) input.</code></pre>
+<pre><code>## 80182 paired-reads (in 450 unique pairings) successfully merged out of 84620 (in 1373 pairings) input.</code></pre>
+<pre><code>## 62730 paired-reads (in 322 unique pairings) successfully merged out of 66559 (in 1062 pairings) input.</code></pre>
+<pre><code>## 49312 paired-reads (in 394 unique pairings) successfully merged out of 51975 (in 1034 pairings) input.</code></pre>
+<pre><code>## 59235 paired-reads (in 432 unique pairings) successfully merged out of 62456 (in 1162 pairings) input.</code></pre>
+<pre><code>## 66528 paired-reads (in 479 unique pairings) successfully merged out of 69203 (in 1492 pairings) input.</code></pre>
+<pre><code>## 65714 paired-reads (in 553 unique pairings) successfully merged out of 68365 (in 1478 pairings) input.</code></pre>
+<pre><code>## 50220 paired-reads (in 419 unique pairings) successfully merged out of 52188 (in 1141 pairings) input.</code></pre>
+<pre><code>## 68394 paired-reads (in 497 unique pairings) successfully merged out of 70469 (in 1247 pairings) input.</code></pre>
+<pre><code>## 66199 paired-reads (in 422 unique pairings) successfully merged out of 69733 (in 1219 pairings) input.</code></pre>
+<pre><code>## 72039 paired-reads (in 448 unique pairings) successfully merged out of 73808 (in 1108 pairings) input.</code></pre>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="denoise.html#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Inspect the merger data.frame from the first sample</span></span>
+<span id="cb38-2"><a href="denoise.html#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(merged[[<span class="dv">1</span>]])</span></code></pre></div>
 <pre><code>##                                                                                                                                                                                                                                                                                                                                                                                                                                      sequence
 ## 1                          TGGGGAATATTGCACAATGGGGGAAACCCTGATGCAGCGACGCCGCGTGAAGGAAGAAGTATCTCGGTATGTAAACTTCTATCAGCAGGGAAGATAGTGACGGTACCTGACTAAGAAGCCCCGGCTAACTACGTGCCAGCAGCCGCGGTAATACGTAGGGGGCAAGCGTTATCCGGATTTACTGGGTGTAAAGGGAGCGTAGACGGTGTGGCAAGTCTGATGTGAAAGGCATGGGCTCAACCTGTGGACTGCATTGGAAACTGTCATACTTGAGTGCCGGAGGGGTAAGCGGAATTCCTAGTGTAGCGGTGAAATGCGTAGATATTAGGAGGAACACCAGTGGCGAAGGCGGCTTACTGGACGGTAACTGACGTTGAGGCTCGAAAGCGTGGGGAGCAAACA
-## 2                 TGGGGAATATTGCACAATGGGCGCAAGCCTGATGCAGCGACGCCGCGTGCGGGATGACGGCCTTCGGGTTGTAAACCGCTTTTGACTGGGAGCAAGCCCTTCGGGGTGAGTGTACCTTTCGAATAAGCACCGGCTAACTACGTGCCAGCAGCCGCGGTAATACGTAGGGTGCAAGCGTTATCCGGAATTATTGGGCGTAAAGGGCTCGTAGGCGGTTCGTCGCGTCCGGTGTGAAAGTCCATCGCTTAACGGTGGATCCGCGCCGGGTACGGGCGGGCTTGAGTGCGGTAGGGGAGACTGGAATTCCCGGTGTAACGGTGGAATGTGTAGATATCGGGAAGAACACCAATGGCGAAGGCAGGTCTCTGGGCCGTCACTGACGCTGAGGAGCGAAAGCGTGGGGAGCGAACA
-## 3 TGGGGAATCTTCCGCAATGGGCGAAAGCCTGACGGAGCAACGCCGCGTGAGTGATGACGGCCTTCGGGTTGTAAAACTCTGTGATCCGGGACGAAAAGGCAGAGTGCGAAGAACAAACTGCATTGACGGTACCGGAAAAGCAAGCCACGGCTAACTACGTGCCAGCAGCCGCGGTAATACGTAGGTGGCAAGCGTTGTCCGGAATTATTGGGCGTAAAGCGCGCGCAGGCGGCTTCCCAAGTCCCTCTTAAAAGTGCGGGGCTTAACCCCGTGATGGGAAGGAAACTGGGAAGCTGGAGTATCGGAGAGGAAAGTGGAATTCCTAGTGTAGCGGTGAAATGCGTAGAGATTAGGAAGAACACCGGTGGCGAAGGCGACTTTCTGGACGAAAACTGACGCTGAGGCGCGAAAGCGTGGGGAGCAAACA
-## 4                          TGGGGAATATTGCACAATGGGCGAAAGCCTGATGCAGCGACGCCGCGTGAGCGAAGAAGTATTTCGGTATGTAAAGCTCTATCAGCAGGGAAGATAATGACGGTACCTGACTAAGAAGCACCGGCTAAATACGTGCCAGCAGCCGCGGTAATACGTATGGTGCAAGCGTTATCCGGATTTACTGGGTGTAAAGGGAGCGCAGGCGGTGCGGCAAGTCTGATGTGAAAGCCCGGGGCTCAACCCCGGTACTGCATTGGAAACTGTCGTACTAGAGTGTCGGAGGGGTAAGCGGAATTCCTAGTGTAGCGGTGAAATGCGTAGATATTAGGAGGAACACCAGTGGCGAAGGCGGCTTACTGGACGATAACTGACGCTGAGGCTCGAAAGCGTGGGGAGCAAACA
+## 2 TGGGGAATCTTCCGCAATGGGCGAAAGCCTGACGGAGCAACGCCGCGTGAGTGATGACGGCCTTCGGGTTGTAAAACTCTGTGATCCGGGACGAAAAGGCAGAGTGCGAAGAACAAACTGCATTGACGGTACCGGAAAAGCAAGCCACGGCTAACTACGTGCCAGCAGCCGCGGTAATACGTAGGTGGCAAGCGTTGTCCGGAATTATTGGGCGTAAAGCGCGCGCAGGCGGCTTCCCAAGTCCCTCTTAAAAGTGCGGGGCTTAACCCCGTGATGGGAAGGAAACTGGGAAGCTGGAGTATCGGAGAGGAAAGTGGAATTCCTAGTGTAGCGGTGAAATGCGTAGAGATTAGGAAGAACACCGGTGGCGAAGGCGACTTTCTGGACGAAAACTGACGCTGAGGCGCGAAAGCGTGGGGAGCAAACA
+## 3                 TGGGGAATATTGCACAATGGGCGCAAGCCTGATGCAGCGACGCCGCGTGCGGGATGACGGCCTTCGGGTTGTAAACCGCTTTTGACTGGGAGCAAGCCCTTCGGGGTGAGTGTACCTTTCGAATAAGCACCGGCTAACTACGTGCCAGCAGCCGCGGTAATACGTAGGGTGCAAGCGTTATCCGGAATTATTGGGCGTAAAGGGCTCGTAGGCGGTTCGTCGCGTCCGGTGTGAAAGTCCATCGCTTAACGGTGGATCCGCGCCGGGTACGGGCGGGCTTGAGTGCGGTAGGGGAGACTGGAATTCCCGGTGTAACGGTGGAATGTGTAGATATCGGGAAGAACACCAATGGCGAAGGCAGGTCTCTGGGCCGTCACTGACGCTGAGGAGCGAAAGCGTGGGGAGCGAACA
+## 4                         TGGGGAATCTTGCGCAATGGGGGGAACCCTGACGCAGCGACGCCGCGTGCGGGACGGAGGCCTTCGGGTCGTAAACCGCTTTCAGCAGGGAAGAGTCAAGACTGTACCTGCAGAAGAAGCCCCGGCTAACTACGTGCCAGCAGCCGCGGTAATACGTAGGGGGCGAGCGTTATCCGGATTCATTGGGCGTAAAGCGCGCGTAGGCGGCCCGGCAGGCCGGGGGTCGAAGCGGGGGGCTCAACCCCCCGAAGCCCCCGGAACCTCCGCGGCTTGGGTCCGGTAGGGGAGGGTGGAACACCCGGTGTAGCGGTGGAATGCGCAGATATCGGGTGGAACACCGGTGGCGAAGGCGGCCCTCTGGGCCGAGACCGACGCTGAGGCGCGAAAGCTGGGGGAGCGAACA
 ## 5                          TGGGGAATATTGCACAATGGGGGAAACCCTGATGCAGCGACGCCGCGTGGAGGAAGAAGGTCTTCGGATTGTAAACTCCTGTTGTTGAGGAAGATAATGACGGTACTCAACAAGGAAGTGACGGCTAACTACGTGCCAGCAGCCGCGGTAAAACGTAGGTCACAAGCGTTGTCCGGAATTACTGGGTGTAAAGGGAGCGCAGGCGGGCGATCAAGTTGGAAGTGAAATCCATGGGCTCAACCCATGAACTGCTTTCAAAACTGGTCGTCTTGAGTAGTGCAGAGGTAGGCGGAATTCCCGGTGTAGCGGTGGAATGCGTAGATATCGGGAGGAACACCAGTGGCGAAGGCGGCCTACTGGGCACCAACTGACGCTGAGGCTCGAAAGTGTGGGTAGCAAACA
-## 6                         TGGGGAATCTTGCGCAATGGGGGGAACCCTGACGCAGCGACGCCGCGTGCGGGACGGAGGCCTTCGGGTCGTAAACCGCTTTCAGCAGGGAAGAGTCAAGACTGTACCTGCAGAAGAAGCCCCGGCTAACTACGTGCCAGCAGCCGCGGTAATACGTAGGGGGCGAGCGTTATCCGGATTCATTGGGCGTAAAGCGCGCGTAGGCGGCCCGGCAGGCCGGGGGTCGAAGCGGGGGGCTCAACCCCCCGAAGCCCCCGGAACCTCCGCGGCTTGGGTCCGGTAGGGGAGGGTGGAACACCCGGTGTAGCGGTGGAATGCGCAGATATCGGGTGGAACACCGGTGGCGAAGGCGGCCCTCTGGGCCGAGACCGACGCTGAGGCGCGAAAGCTGGGGGAGCGAACA
+## 6                          TGGGGAATATTGCACAATGGGGGAAACCCTGATGCAGCGACGCCGCGTGGAGGAAGAAGGTCTTCGGATTGTAAACTCCTGTTGTTGGGGAAGATAATGACGGTACCCAACAAGGAAGTGACGGCTAACTACGTGCCAGCAGCCGCGGTAAAACGTAGGTCACAAGCGTTGTCCGGAATTACTGGGTGTAAAGGGAGCGCAGGCGGGAAGACAAGTTGGAAGTGAAATCTATGGGCTCAACCCATAAACTGCTTTCAAAACTGTTTTTCTTGAGTAGTGCAGAGGTAGGCGGAATTCCCGGTGTAGCGGTGGAATGCGTAGATATCGGGAGGAACACCAGTGGCGAAGGCGGCCTACTGGGCACCAACTGACGCTGAGGCTCGAAAGTGTGGGTAGCAAACA
 ##   abundance forward reverse nmatch nmismatch nindel prefer accept
-## 1      4464       1       1     78         0      0      1   TRUE
-## 2      4074       3       3     69         0      0      1   TRUE
-## 3      4067       2       5     53         0      0      1   TRUE
-## 4      3150       4       2     78         0      0      2   TRUE
-## 5      3134       5       4     78         0      0      1   TRUE
-## 6      2800       6       8     77         0      0      1   TRUE</code></pre>
+## 1      4947       1       1    128         0      0      1   TRUE
+## 2      4839       2       5    103         0      0      1   TRUE
+## 3      4766       3       2    119         0      0      1   TRUE
+## 4      3659       4      11    127         0      0      1   TRUE
+## 5      3492       6       4    128         0      0      1   TRUE
+## 6      2743       7       6    128         0      0      1   TRUE</code></pre>
 <p>The <code>merged</code> object is a list of data.frames from each sample. Each data.frame contains the merged <code>$sequence</code>, its <code>$abundance</code>, and the indices of the <code>$forward</code> and <code>$reverse</code> sequence variants that were merged. Paired reads that did not exactly overlap were removed by <code>mergePairs</code>, further reducing spurious output.</p>
 <p><strong>Considerations</strong>: Most of your reads should successully merge.If that is not the case upstream parameters may need to be revisited: Did you trim away the overlap between your reads?</p>
 </div>
 <div id="construct-sequence-table" class="section level2 hasAnchor" number="5.5">
 <h2><span class="header-section-number">5.5</span> Construct sequence table<a href="denoise.html#construct-sequence-table" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>We can now construct an amplicon sequence variant table (ASV) table, a higher-resolution version of the OTU table produced by traditional methods.</p>
-<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="denoise.html#cb41-1" aria-hidden="true" tabindex="-1"></a>seqtab <span class="ot">&lt;-</span> <span class="fu">makeSequenceTable</span>(merged)</span>
-<span id="cb41-2"><a href="denoise.html#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(seqtab)</span></code></pre></div>
-<pre><code>## [1]   24 7656</code></pre>
-<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="denoise.html#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Inspect distribution of sequence lengths</span></span>
-<span id="cb43-2"><a href="denoise.html#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(<span class="fu">nchar</span>(<span class="fu">getSequences</span>(seqtab)))</span></code></pre></div>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="denoise.html#cb40-1" aria-hidden="true" tabindex="-1"></a>seqtab <span class="ot">&lt;-</span> <span class="fu">makeSequenceTable</span>(merged)</span>
+<span id="cb40-2"><a href="denoise.html#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(seqtab)</span></code></pre></div>
+<pre><code>## [1]   24 5199</code></pre>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="denoise.html#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Inspect distribution of sequence lengths</span></span>
+<span id="cb42-2"><a href="denoise.html#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(<span class="fu">nchar</span>(<span class="fu">getSequences</span>(seqtab)))</span></code></pre></div>
 <pre><code>## 
-##  260  282  300  315  323  365  366  372  373  377  380  385  386  393  400  401 
-##    4    1    1    1    2    1    1    1    2    1    1    2    1    1    3  372 
-##  402  403  404  405  406  407  408  409  410  411  412  416  418  419  420  421 
-## 3686  744  300  429   31  159   76  160   31  141    3    1    2    3    7   62 
-##  422  423  424  425  426  427  428  429  434  439  463 
-##  536   15    1    3  198  484  185    1    1    1    1</code></pre>
+##  282  300  315  323  365  366  373  380  385  386  401  402  403  404  405  406 
+##    1    1    1    2    1    1    2    1    1    1  264 2313  510  210  282   24 
+##  407  408  409  410  411  412  418  419  420  421  422  423  424  425  426  427 
+##  116   44  108   15   99    3    2    3    6   54  406   12    1    2  197  368 
+##  428  434  439  463  470 
+##  144    1    1    1    1</code></pre>
 <p>The sequence table is a matrix with rows corresponding to (and named by) the samples, and columns corresponding to (and named by) the sequence variants.</p>
 <div id="exercise-4" class="section level3 hasAnchor" number="5.5.1">
 <h3><span class="header-section-number">5.5.1</span> Exercise<a href="denoise.html#exercise-4" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>Are these sequences the length that you expect? How are the reads concentrated in the merged sequence lengths? Plot the distribution of sequence lengths to explore.</p>
+<p>Are these sequences the length that you expect? How are the reads concentrated in the merged sequence lengths? Plot the distribution of sequence lengths to explore. Something like the plot shown below.</p>
+<p><img src="16Sworkbook_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
 </div>
 <div id="exercise-5" class="section level3 hasAnchor" number="5.5.2">
 <h3><span class="header-section-number">5.5.2</span> Exercise<a href="denoise.html#exercise-5" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Sequences that are much longer or shorter than expected may be the result of non-specific priming. Remove the non-target-length sequences from your sequence table. This is analogous to “cutting a band” in-silico to get amplicons of the targeted length.</p>
-<p><strong>Hint</strong>. You may find the function <code>nchar</code> useful.</p>
-
+<p>After size selection:</p>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="denoise.html#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(seqtab)</span></code></pre></div>
+<pre><code>## [1]   24 5185</code></pre>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="denoise.html#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(<span class="fu">nchar</span>(<span class="fu">getSequences</span>(seqtab)))</span></code></pre></div>
+<pre><code>## 
+##  401  402  403  404  405  406  407  408  409  410  411  412  418  419  420  421 
+##  264 2313  510  210  282   24  116   44  108   15   99    3    2    3    6   54 
+##  422  423  424  425  426  427  428  434  439 
+##  406   12    1    2  197  368  144    1    1</code></pre>
+</div>
+</div>
+<div id="remove-chimeras" class="section level2 hasAnchor" number="5.6">
+<h2><span class="header-section-number">5.6</span> Remove Chimeras<a href="denoise.html#remove-chimeras" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The core dada method corrects substitution and indel errors, but chimeras remain. Fortunately, the accuracy of sequence variants after denoising makes identifying chimeric ASVs simpler than when dealing with fuzzy OTUs. Chimeric sequences are identified if they can be exactly reconstructed by combining a left-segment and a right-segment from two more abundant “parent” sequences.</p>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="denoise.html#cb48-1" aria-hidden="true" tabindex="-1"></a>seqtab.nochim <span class="ot">&lt;-</span> <span class="fu">removeBimeraDenovo</span>(seqtab, </span>
+<span id="cb48-2"><a href="denoise.html#cb48-2" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">method=</span><span class="st">&quot;consensus&quot;</span>, </span>
+<span id="cb48-3"><a href="denoise.html#cb48-3" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">multithread=</span><span class="cn">TRUE</span>, </span>
+<span id="cb48-4"><a href="denoise.html#cb48-4" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">verbose=</span><span class="cn">TRUE</span>)</span></code></pre></div>
+<pre><code>## Identified 3984 bimeras out of 5185 input sequences.</code></pre>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="denoise.html#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(seqtab.nochim)</span></code></pre></div>
+<pre><code>## [1]   24 1201</code></pre>
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="denoise.html#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(seqtab.nochim)<span class="sc">/</span><span class="fu">sum</span>(seqtab)</span></code></pre></div>
+<pre><code>## [1] 0.9463682</code></pre>
+<p>The frequency of chimeric sequences varies substantially from dataset to dataset, and depends on on factors including experimental procedures and sample complexity.</p>
+<p><strong>Consideration</strong>: Most of your reads should remain after chimera removal (it is not uncommon for a majority of sequence variants to be removed though). If most of your reads were removed as chimeric, upstream processing may need to be revisited. In almost all cases this is caused by primer sequences with ambiguous nucleotides that were not removed prior to beginning the DADA2 pipeline.</p>
+</div>
+<div id="track-reads-through-the-pipeline" class="section level2 hasAnchor" number="5.7">
+<h2><span class="header-section-number">5.7</span> Track reads through the pipeline<a href="denoise.html#track-reads-through-the-pipeline" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>As a final check of our progress, we’ll look at the number of reads that made it through each step in the pipeline:</p>
+<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="denoise.html#cb54-1" aria-hidden="true" tabindex="-1"></a>getN <span class="ot">&lt;-</span> <span class="cf">function</span>(x) <span class="fu">sum</span> (<span class="fu">getUniques</span>(x))</span>
+<span id="cb54-2"><a href="denoise.html#cb54-2" aria-hidden="true" tabindex="-1"></a>summary_tab <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">row.names=</span><span class="fu">basename</span>(sample.names), </span>
+<span id="cb54-3"><a href="denoise.html#cb54-3" aria-hidden="true" tabindex="-1"></a>                          <span class="at">Input=</span>out[,<span class="dv">1</span>], </span>
+<span id="cb54-4"><a href="denoise.html#cb54-4" aria-hidden="true" tabindex="-1"></a>                          <span class="at">Filtered=</span>out[,<span class="dv">2</span>],</span>
+<span id="cb54-5"><a href="denoise.html#cb54-5" aria-hidden="true" tabindex="-1"></a>                          <span class="at">Denoised=</span><span class="fu">sapply</span>(dadaFs, getN), </span>
+<span id="cb54-6"><a href="denoise.html#cb54-6" aria-hidden="true" tabindex="-1"></a>                          <span class="at">Merged=</span><span class="fu">sapply</span>(merged, getN), </span>
+<span id="cb54-7"><a href="denoise.html#cb54-7" aria-hidden="true" tabindex="-1"></a>                          <span class="at">Non.Chimeric=</span><span class="fu">rowSums</span>(seqtab.nochim), </span>
+<span id="cb54-8"><a href="denoise.html#cb54-8" aria-hidden="true" tabindex="-1"></a>                          <span class="at">Total.Perc.Remaining =</span> <span class="fu">round</span>(<span class="fu">rowSums</span>(seqtab.nochim)<span class="sc">/</span>out[,<span class="dv">1</span>]<span class="sc">*</span><span class="dv">100</span> ,<span class="dv">1</span>))</span>
+<span id="cb54-9"><a href="denoise.html#cb54-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-10"><a href="denoise.html#cb54-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-11"><a href="denoise.html#cb54-11" aria-hidden="true" tabindex="-1"></a><span class="do">## Write this table to output</span></span>
+<span id="cb54-12"><a href="denoise.html#cb54-12" aria-hidden="true" tabindex="-1"></a><span class="fu">write.table</span>(summary_tab, <span class="fu">file.path</span>(path, <span class="st">&quot;reads_tracked.txt&quot;</span>))</span></code></pre></div>
+<div id="exercise-6" class="section level3 hasAnchor" number="5.7.1">
+<h3><span class="header-section-number">5.7.1</span> Exercise<a href="denoise.html#exercise-6" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Make a plot to visualize the results in <code>reads_tracked.txt</code>. Something like this:</p>
+<p><img src="16Sworkbook_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
 </div>
 </div>
 </div>
@@ -370,8 +432,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           </div>
         </div>
       </div>
-<a href="filter.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-
+<a href="filter.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="assign-taxonomy.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

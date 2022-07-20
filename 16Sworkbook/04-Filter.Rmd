@@ -62,7 +62,7 @@ We’ll use standard filtering parameters: `maxN=0` (DADA2 requires no Ns), `tru
 ```{r}
 
 out <- filterAndTrim(ftrim, ffilt, rtrim, rfilt, 
-                     truncLen=c(280,260),
+                     truncLen=c(280,250),
                      maxN=0, 
                      maxEE=c(3,5), 
                      truncQ=2, 
@@ -106,7 +106,7 @@ for (i in seq(from = 300-45, to = 300, by = 5)){
                          rtrim[1:4],
                          rfilt[1:4], 
                          truncLen=c(i,j),
-                         maxEE=c(2,5), rm.phix=TRUE,
+                         maxEE=c(3,5), rm.phix=TRUE,
                          compress=TRUE, multithread=TRUE,
                          matchIDs=TRUE)
     res <- data.frame(Sample = rownames(out), perc = out[,2]/out[,1], for_trunc = i, rev_trunc = j)
@@ -135,7 +135,7 @@ for (i in 1:5){
                          ffilt[1:4],
                          rtrim[1:4],
                          rfilt[1:4],
-		                     truncLen=c(280,260),
+		                     truncLen=c(280,250),
 		                     maxEE=c(i,j), rm.phix=TRUE,
 		                     compress=TRUE, multithread=TRUE, 
 		                     matchIDs=TRUE)

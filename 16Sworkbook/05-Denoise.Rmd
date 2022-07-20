@@ -23,7 +23,7 @@ The `DADA2` algorithm makes use of a parametric error model (`err`) and every am
 
 ## Learn the Error Rates
 
-Note: this is the most computationally intensive part of the process. Depending on your computer, this could take a while.
+Note: this is the most computationally intensive part of the `dada2` pipeline. Depending on your computer, this could take a while.
 
 ```{r}
 errF <- learnErrors(ffilt, multithread = TRUE)
@@ -32,7 +32,7 @@ errR <- learnErrors(rfilt, multithread = TRUE)
 
 Visualize the estimated error rates:
 
-```{r}
+```{r, warning = FALSE}
 plotErrors(errF, nominalQ = TRUE)
 ```
 
@@ -104,7 +104,7 @@ plot(as.integer(names(readsbyseqlen)),readsbyseqlen, xlab = "Merged length", yla
 Sequences that are much longer or shorter than expected may be the result of non-specific priming. Remove the non-target-length sequences from your sequence table. This is analogous to “cutting a band” in-silico to get amplicons of the targeted length.
 
 ```{r, echo = FALSE}
-#seqtab <- seqtab[,nchar(colnames(seqtab)) %in% 250:256]
+seqtab <- seqtab[,nchar(colnames(seqtab)) %in% 400:450]
 ```
 
 After size selection:
@@ -140,7 +140,7 @@ getN <- function(x) sum (getUniques(x))
 summary_tab <- data.frame(row.names=basename(sample.names), 
                           Input=out[,1], 
                           Filtered=out[,2],
-                          Denoised=sapply(dadaF, getN), 
+                          Denoised=sapply(dadaFs, getN), 
                           Merged=sapply(merged, getN), 
                           Non.Chimeric=rowSums(seqtab.nochim), 
                           Total.Perc.Remaining = round(rowSums(seqtab.nochim)/out[,1]*100 ,1))
@@ -173,6 +173,48 @@ gg
 # Assign Taxonomy
 
 We will use the function `assignTaxonony` to assign taxonomy to the sequence variants. This function takes as input a set of sequences to be classified and a training set of reference sequences with known taxonomy, and outputs taxonomic assignment with at least `minBoot` bootstrap confidence. 
+
+## Download the database
+
+Download the following databases from the [Silva website](https://zenodo.org/record/4587955#.YtYY2C2cZo4):
+
+- silva_nr99_v138.1_train_set.fa.gz
+- silva_species_assignment_v138.1.fa.gz
+
+```{r}
+path_to_refs <- "~/Desktop/dropbox_temp/bcch/reference_files"
+taxa <- assignTaxonomy(seqtab.nochim, file.path(path_to_refs, "silva_nr99_v138_train_set.fa"), multithread=TRUE)
+
+```
+
+The dada2 package also implements a method to make species level assignments based on exact matching between ASVs and sequenced reference strains. Recent analysis suggests that exact matching (or 100% identity) is the only appropriate way to assign species to 16S gene fragments. Currently, species-assignment training fastas are available for the Silva and RDP 16S databases. To follow the optional species addition step, download the silva_species_assignment_v132.fa.gz file, and place it in the directory with the fastq files.
+
+```{r}
+taxa <- addSpecies(taxa, file.path(path_to_refs, "silva_species_assignment_v138.fa"))
+
+```
+
+Inspect the taxonomic assignments:
+
+```{r}
+taxa.print <- taxa # Removing sequence rownames for display only
+rownames(taxa.print) <- NULL
+head(taxa.print)
+```
+
+Finally, we've reached the end of the `dada2` pipeline. But first, we need to save the two files we've generated:
+
+```{r}
+path <- "~/Desktop/microbiomeworkshop2022/results"
+saveRDS(seqtab.nochim, file.path(path, "seqtab_final.rds"))
+saveRDS(taxa, file.path(path, "taxa_final.rds"))
+```
+
+
+
+
+
+
 
 
 

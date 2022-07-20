@@ -189,6 +189,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="5.5.1" data-path="denoise.html"><a href="denoise.html#exercise-4"><i class="fa fa-check"></i><b>5.5.1</b> Exercise</a></li>
 <li class="chapter" data-level="5.5.2" data-path="denoise.html"><a href="denoise.html#exercise-5"><i class="fa fa-check"></i><b>5.5.2</b> Exercise</a></li>
 </ul></li>
+<li class="chapter" data-level="5.6" data-path="denoise.html"><a href="denoise.html#remove-chimeras"><i class="fa fa-check"></i><b>5.6</b> Remove Chimeras</a></li>
+<li class="chapter" data-level="5.7" data-path="denoise.html"><a href="denoise.html#track-reads-through-the-pipeline"><i class="fa fa-check"></i><b>5.7</b> Track reads through the pipeline</a>
+<ul>
+<li class="chapter" data-level="5.7.1" data-path="denoise.html"><a href="denoise.html#exercise-6"><i class="fa fa-check"></i><b>5.7.1</b> Exercise</a></li>
+</ul></li>
+<li class="chapter" data-level="5.8" data-path="denoise.html"><a href="denoise.html#download-the-database"><i class="fa fa-check"></i><b>5.8</b> Download the database</a></li>
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -240,7 +246,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb3-2"><a href="filter.html#cb3-2" aria-hidden="true" tabindex="-1"></a>rfilt <span class="ot">&lt;-</span> <span class="fu">file.path</span>(path, <span class="st">&quot;filtered&quot;</span>, <span class="fu">paste0</span>(<span class="fu">basename</span>(sample.names), <span class="st">&quot;_R_filtered.fastq.gz&quot;</span>))</span></code></pre></div>
 <p>We’ll use standard filtering parameters: <code>maxN=0</code> (DADA2 requires no Ns), <code>truncQ=2</code>, <code>rm.phix=TRUE</code> and <code>maxEE=2</code>. The maxEE parameter sets the maximum number of “expected errors” allowed in a read, which is a better filter than simply averaging quality scores.</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="filter.html#cb4-1" aria-hidden="true" tabindex="-1"></a>out <span class="ot">&lt;-</span> <span class="fu">filterAndTrim</span>(ftrim, ffilt, rtrim, rfilt, </span>
-<span id="cb4-2"><a href="filter.html#cb4-2" aria-hidden="true" tabindex="-1"></a>                     <span class="at">truncLen=</span><span class="fu">c</span>(<span class="dv">280</span>,<span class="dv">260</span>),</span>
+<span id="cb4-2"><a href="filter.html#cb4-2" aria-hidden="true" tabindex="-1"></a>                     <span class="at">truncLen=</span><span class="fu">c</span>(<span class="dv">280</span>,<span class="dv">250</span>),</span>
 <span id="cb4-3"><a href="filter.html#cb4-3" aria-hidden="true" tabindex="-1"></a>                     <span class="at">maxN=</span><span class="dv">0</span>, </span>
 <span id="cb4-4"><a href="filter.html#cb4-4" aria-hidden="true" tabindex="-1"></a>                     <span class="at">maxEE=</span><span class="fu">c</span>(<span class="dv">3</span>,<span class="dv">5</span>), </span>
 <span id="cb4-5"><a href="filter.html#cb4-5" aria-hidden="true" tabindex="-1"></a>                     <span class="at">truncQ=</span><span class="dv">2</span>, </span>
@@ -250,12 +256,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb4-9"><a href="filter.html#cb4-9" aria-hidden="true" tabindex="-1"></a>                     <span class="at">matchIDs=</span><span class="cn">TRUE</span>) <span class="co"># On Windows set multithread=FALSE</span></span>
 <span id="cb4-10"><a href="filter.html#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(out)</span></code></pre></div>
 <pre><code>##                                   reads.in reads.out
-## 01MP-1_S1_L001_F_trimmed.fastq.gz    92517     69994
-## 01MP-2_S2_L001_F_trimmed.fastq.gz    99092     72077
-## 01MP-3_S3_L001_F_trimmed.fastq.gz    95994     72246
-## 03KW-1_S4_L001_F_trimmed.fastq.gz   111386     83910
-## 03KW-2_S5_L001_F_trimmed.fastq.gz    82113     63458
-## 03KW-3_S6_L001_F_trimmed.fastq.gz   123229     91743</code></pre>
+## 01MP-1_S1_L001_F_trimmed.fastq.gz    92517     71681
+## 01MP-2_S2_L001_F_trimmed.fastq.gz    99092     74146
+## 01MP-3_S3_L001_F_trimmed.fastq.gz    95994     74446
+## 03KW-1_S4_L001_F_trimmed.fastq.gz   111386     85861
+## 03KW-2_S5_L001_F_trimmed.fastq.gz    82113     64853
+## 03KW-3_S6_L001_F_trimmed.fastq.gz   123229     93850</code></pre>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="filter.html#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Save output</span></span>
 <span id="cb6-2"><a href="filter.html#cb6-2" aria-hidden="true" tabindex="-1"></a>path <span class="ot">&lt;-</span> <span class="st">&quot;~/Desktop/microbiomeworkshop2022/results&quot;</span></span>
 <span id="cb6-3"><a href="filter.html#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(out, <span class="fu">file.path</span>(path, <span class="st">&quot;filt_out.rds&quot;</span>))</span></code></pre></div>
@@ -271,137 +277,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="exploring-parameters" class="section level2 hasAnchor" number="4.3">
 <h2><span class="header-section-number">4.3</span> Exploring parameters<a href="filter.html#exploring-parameters" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<pre><code>## Warning in filterAndTrim(ftrim[1:4], ffilt[1:4], rtrim[1:4], rfilt[1:4], : No
-## reads passed the filter. Please revisit your filtering parameters.
-
-## Warning in filterAndTrim(ftrim[1:4], ffilt[1:4], rtrim[1:4], rfilt[1:4], : No
-## reads passed the filter. Please revisit your filtering parameters.
-
-## Warning in filterAndTrim(ftrim[1:4], ffilt[1:4], rtrim[1:4], rfilt[1:4], : No
-## reads passed the filter. Please revisit your filtering parameters.
-
-## Warning in filterAndTrim(ftrim[1:4], ffilt[1:4], rtrim[1:4], rfilt[1:4], : No
-## reads passed the filter. Please revisit your filtering parameters.
-
-## Warning in filterAndTrim(ftrim[1:4], ffilt[1:4], rtrim[1:4], rfilt[1:4], : No
-## reads passed the filter. Please revisit your filtering parameters.
-
-## Warning in filterAndTrim(ftrim[1:4], ffilt[1:4], rtrim[1:4], rfilt[1:4], : No
-## reads passed the filter. Please revisit your filtering parameters.
-
-## Warning in filterAndTrim(ftrim[1:4], ffilt[1:4], rtrim[1:4], rfilt[1:4], : No
-## reads passed the filter. Please revisit your filtering parameters.
-
-## Warning in filterAndTrim(ftrim[1:4], ffilt[1:4], rtrim[1:4], rfilt[1:4], : No
-## reads passed the filter. Please revisit your filtering parameters.
-
-## Warning in filterAndTrim(ftrim[1:4], ffilt[1:4], rtrim[1:4], rfilt[1:4], : No
-## reads passed the filter. Please revisit your filtering parameters.
-
-## Warning in filterAndTrim(ftrim[1:4], ffilt[1:4], rtrim[1:4], rfilt[1:4], : No
-## reads passed the filter. Please revisit your filtering parameters.
-
-## Warning in filterAndTrim(ftrim[1:4], ffilt[1:4], rtrim[1:4], rfilt[1:4], : No
-## reads passed the filter. Please revisit your filtering parameters.
-
-## Warning in filterAndTrim(ftrim[1:4], ffilt[1:4], rtrim[1:4], rfilt[1:4], : No
-## reads passed the filter. Please revisit your filtering parameters.
-
-## Warning in filterAndTrim(ftrim[1:4], ffilt[1:4], rtrim[1:4], rfilt[1:4], : No
-## reads passed the filter. Please revisit your filtering parameters.
-
-## Warning in filterAndTrim(ftrim[1:4], ffilt[1:4], rtrim[1:4], rfilt[1:4], : No
-## reads passed the filter. Please revisit your filtering parameters.
-
-## Warning in filterAndTrim(ftrim[1:4], ffilt[1:4], rtrim[1:4], rfilt[1:4], : No
-## reads passed the filter. Please revisit your filtering parameters.
-
-## Warning in filterAndTrim(ftrim[1:4], ffilt[1:4], rtrim[1:4], rfilt[1:4], : No
-## reads passed the filter. Please revisit your filtering parameters.
-
-## Warning in filterAndTrim(ftrim[1:4], ffilt[1:4], rtrim[1:4], rfilt[1:4], : No
-## reads passed the filter. Please revisit your filtering parameters.
-
-## Warning in filterAndTrim(ftrim[1:4], ffilt[1:4], rtrim[1:4], rfilt[1:4], : No
-## reads passed the filter. Please revisit your filtering parameters.
-
-## Warning in filterAndTrim(ftrim[1:4], ffilt[1:4], rtrim[1:4], rfilt[1:4], : No
-## reads passed the filter. Please revisit your filtering parameters.
-
-## Warning in filterAndTrim(ftrim[1:4], ffilt[1:4], rtrim[1:4], rfilt[1:4], : No
-## reads passed the filter. Please revisit your filtering parameters.
-
-## Warning in filterAndTrim(ftrim[1:4], ffilt[1:4], rtrim[1:4], rfilt[1:4], : No
-## reads passed the filter. Please revisit your filtering parameters.
-
-## Warning in filterAndTrim(ftrim[1:4], ffilt[1:4], rtrim[1:4], rfilt[1:4], : No
-## reads passed the filter. Please revisit your filtering parameters.
-
-## Warning in filterAndTrim(ftrim[1:4], ffilt[1:4], rtrim[1:4], rfilt[1:4], : No
-## reads passed the filter. Please revisit your filtering parameters.
-
-## Warning in filterAndTrim(ftrim[1:4], ffilt[1:4], rtrim[1:4], rfilt[1:4], : No
-## reads passed the filter. Please revisit your filtering parameters.
-
-## Warning in filterAndTrim(ftrim[1:4], ffilt[1:4], rtrim[1:4], rfilt[1:4], : No
-## reads passed the filter. Please revisit your filtering parameters.
-
-## Warning in filterAndTrim(ftrim[1:4], ffilt[1:4], rtrim[1:4], rfilt[1:4], : No
-## reads passed the filter. Please revisit your filtering parameters.
-
-## Warning in filterAndTrim(ftrim[1:4], ffilt[1:4], rtrim[1:4], rfilt[1:4], : No
-## reads passed the filter. Please revisit your filtering parameters.
-
-## Warning in filterAndTrim(ftrim[1:4], ffilt[1:4], rtrim[1:4], rfilt[1:4], : No
-## reads passed the filter. Please revisit your filtering parameters.
-
-## Warning in filterAndTrim(ftrim[1:4], ffilt[1:4], rtrim[1:4], rfilt[1:4], : No
-## reads passed the filter. Please revisit your filtering parameters.
-
-## Warning in filterAndTrim(ftrim[1:4], ffilt[1:4], rtrim[1:4], rfilt[1:4], : No
-## reads passed the filter. Please revisit your filtering parameters.
-
-## Warning in filterAndTrim(ftrim[1:4], ffilt[1:4], rtrim[1:4], rfilt[1:4], : No
-## reads passed the filter. Please revisit your filtering parameters.
-
-## Warning in filterAndTrim(ftrim[1:4], ffilt[1:4], rtrim[1:4], rfilt[1:4], : No
-## reads passed the filter. Please revisit your filtering parameters.
-
-## Warning in filterAndTrim(ftrim[1:4], ffilt[1:4], rtrim[1:4], rfilt[1:4], : No
-## reads passed the filter. Please revisit your filtering parameters.
-
-## Warning in filterAndTrim(ftrim[1:4], ffilt[1:4], rtrim[1:4], rfilt[1:4], : No
-## reads passed the filter. Please revisit your filtering parameters.
-
-## Warning in filterAndTrim(ftrim[1:4], ffilt[1:4], rtrim[1:4], rfilt[1:4], : No
-## reads passed the filter. Please revisit your filtering parameters.
-
-## Warning in filterAndTrim(ftrim[1:4], ffilt[1:4], rtrim[1:4], rfilt[1:4], : No
-## reads passed the filter. Please revisit your filtering parameters.
-
-## Warning in filterAndTrim(ftrim[1:4], ffilt[1:4], rtrim[1:4], rfilt[1:4], : No
-## reads passed the filter. Please revisit your filtering parameters.
-
-## Warning in filterAndTrim(ftrim[1:4], ffilt[1:4], rtrim[1:4], rfilt[1:4], : No
-## reads passed the filter. Please revisit your filtering parameters.
-
-## Warning in filterAndTrim(ftrim[1:4], ffilt[1:4], rtrim[1:4], rfilt[1:4], : No
-## reads passed the filter. Please revisit your filtering parameters.
-
-## Warning in filterAndTrim(ftrim[1:4], ffilt[1:4], rtrim[1:4], rfilt[1:4], : No
-## reads passed the filter. Please revisit your filtering parameters.
-
-## Warning in filterAndTrim(ftrim[1:4], ffilt[1:4], rtrim[1:4], rfilt[1:4], : No
-## reads passed the filter. Please revisit your filtering parameters.
-
-## Warning in filterAndTrim(ftrim[1:4], ffilt[1:4], rtrim[1:4], rfilt[1:4], : No
-## reads passed the filter. Please revisit your filtering parameters.
-
-## Warning in filterAndTrim(ftrim[1:4], ffilt[1:4], rtrim[1:4], rfilt[1:4], : No
-## reads passed the filter. Please revisit your filtering parameters.
-
-## Warning in filterAndTrim(ftrim[1:4], ffilt[1:4], rtrim[1:4], rfilt[1:4], : No
-## reads passed the filter. Please revisit your filtering parameters.</code></pre>
 <p><img src="16Sworkbook_files/figure-html/unnamed-chunk-5-1.png" width="672" /><img src="16Sworkbook_files/figure-html/unnamed-chunk-5-2.png" width="672" /></p>
 
 </div>
