@@ -23,7 +23,7 @@
 <meta name="author" content="Alana Schick" />
 
 
-<meta name="date" content="2022-07-18" />
+<meta name="date" content="2022-07-22" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -361,8 +361,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="denoise.html#cb40-1" aria-hidden="true" tabindex="-1"></a>seqtab <span class="ot">&lt;-</span> <span class="fu">makeSequenceTable</span>(merged)</span>
 <span id="cb40-2"><a href="denoise.html#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(seqtab)</span></code></pre></div>
 <pre><code>## [1]   24 5199</code></pre>
-<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="denoise.html#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Inspect distribution of sequence lengths</span></span>
-<span id="cb42-2"><a href="denoise.html#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(<span class="fu">nchar</span>(<span class="fu">getSequences</span>(seqtab)))</span></code></pre></div>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="denoise.html#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(seqtab) <span class="ot">&lt;-</span> <span class="fu">basename</span>(sample.names)</span>
+<span id="cb42-2"><a href="denoise.html#cb42-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-3"><a href="denoise.html#cb42-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Inspect distribution of sequence lengths</span></span>
+<span id="cb42-4"><a href="denoise.html#cb42-4" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(<span class="fu">nchar</span>(<span class="fu">getSequences</span>(seqtab)))</span></code></pre></div>
 <pre><code>## 
 ##  282  300  315  323  365  366  373  380  385  386  401  402  403  404  405  406 
 ##    1    1    1    2    1    1    2    1    1    1  264 2313  510  210  282   24 

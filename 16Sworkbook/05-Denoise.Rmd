@@ -84,6 +84,8 @@ We can now construct an amplicon sequence variant table (ASV) table, a higher-re
 seqtab <- makeSequenceTable(merged)
 dim(seqtab)
 
+rownames(seqtab) <- basename(sample.names)
+
 # Inspect distribution of sequence lengths
 table(nchar(getSequences(seqtab)))
 ```

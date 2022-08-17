@@ -34,25 +34,23 @@ Time | Topic
 
 Time | Topic                                         
 :-------| :----------------------------------
-09:00  | 5. Denoise
-09:40  | 6. Assign Taxonomy
-10:00  | 7. Phyloseq - Preprocessing
-10:15  | Break
-10:30  | Session
-11:30  | Lunch break
-12:00  | Session
-13:00  | Finish
+13:00  | 5. Denoise
+13:30  | 6. Assign Taxonomy
+14:00  | 7. Phyloseq - Preprocessing
+14:30  | Break
+15:00  | 7. Phyloseq - Preprocessing (cont)
+15:30  | 8. Taxonomic Composition
+16:00  | Finish
 
 ### Day 3 {-}
 
 Time | Topic                                         
 :-------| :----------------------------------
-09:00  | Session
-10:15  | Break
-10:30  | Session
-11:30  | Lunch break
-12:00  | Session
-13:00  | Finish
+13:00  | 9. Alpha Diversity
+13:45  | 10. Beta Diversity
+14:30  | Break
+15:00  | 11. Statistical Methods
+16:00  | Finish
 
 
 ## Important links {-}
