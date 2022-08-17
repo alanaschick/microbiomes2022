@@ -1,0 +1,8 @@
+```{r setup10, include=FALSE} 
+library(dada2)
+library(tidyverse)
+library(phyloseq)
+
+```
+
+# Beta Diversity

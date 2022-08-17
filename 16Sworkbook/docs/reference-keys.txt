@@ -62,3 +62,7 @@ phyloseq
 import
 preprocess
 assign-taxonomy
+taxonomic-composition
+alpha-diversity
+beta-diversity
+hypothesis-testing
