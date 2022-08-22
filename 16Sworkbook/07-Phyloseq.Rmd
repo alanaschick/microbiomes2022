@@ -14,11 +14,12 @@ The phyloseq R package is a powerful framework for further analysis of microbiom
 ```{r}
 path <- "~/Desktop/microbiomeworkshop2022/"
 
-
 ## Read in files
 seqtab <- readRDS(file.path(path, "results/seqtab_final.rds"))
 taxa <- readRDS(file.path(path, "results/taxa_final.rds"))
 ```
+
+---
 
 ### Exercise
 
@@ -26,11 +27,21 @@ taxa <- readRDS(file.path(path, "results/taxa_final.rds"))
 
 2. Phyloseq needs the rownames of the metadata to match the sample names. How can you accomplish this? 
 
+---
+
 ```{r, echo = FALSE}
 info <- read.table(file.path(path, "project_metadata.txt"), header = TRUE)
 
 ## Name rows after Sample ID
 rownames(info) <- info$SampleID
+```
+
+Before creating your phyloseq object, familiarize yourself with the metadata. Are there any other changes you need to make?
+
+It can sometimes be useful to clean up the sample names at this point - Illumina will add their own sample numbers to your sample names. You can do this by creating a new variable that doesn't contain the information Illumina added:
+
+```{r}
+info <- info %>% separate(SampleID, c("SampleID", "temp"), sep = "_S")
 ```
 
 Make a phyloseq object:
@@ -55,15 +66,163 @@ rownames(tax_table(ps)) <- asv_names
 
 You can see that the phyloseq object has an `otu_table`(ASV table), `sample_data` and `tax_table`. You can use functions `tax_table()`, `sample_data()` and `otu_table()` to access the data.
 
+---
+
 ### Exercise
 
 Take a look the following functions and find out what they do:
-- subset_samples()
-- subset_taxa()
-- tax_glom()
-- sample_sums()
-- prune_samples()
-- transform_sample_counts()
-- psmelt()
+
+* subset_samples()
+* subset_taxa()
+* tax_glom()
+* sample_sums()
+* prune_samples()
+* transform_sample_counts()
+* psmelt()
+
+---
 
 ## Preprocess
+
+### Reads per sample
+
+In general, the first step in pre-processing is to check how many reads you have per sample and remove any samples if they failed. 
+
+---
+
+### Exercise
+
+Use either the `rowSums()` or `colSums()` function (or any other function of your choosing) to create a variable that contains the total number of reads per sample.
+
+```{r, echo = FALSE}
+sums <- rowSums(otu_table(ps))
+```
+
+---
+
+Once you have this, create a data frame containing this information:
+
+```{r}
+counts <- data.frame(as(sample_data(ps), "data.frame"), TotalReads = sums)
+head(counts)
+```
+
+---
+
+### Exercise
+
+Create a visualization of these results (something like the one below) and decide if any of the samples need to be removed. 
+
+```{r, echo = FALSE}
+pp <- ggplot(counts, aes(x = SampleID, y = TotalReads+1)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(size = 8, angle = 90, vjust = 0.5)) +
+  geom_hline(yintercept = 10000, lty = 2) +
+  ylab("Number of reads")
+pp
+```
+
+---
+
+**Other considerations**: If there is a large amount of variation in the number of reads across samples (in general, more than 10-fold), you need to take steps to normalize the data.
+
+## Filtering
+
+Here, we filter out ASVs (amplicon sequence variants) using two criteria: **abundance** and **prevalence**. First, compute the prevalence of each ASV by defining prevalence as the number of samples in which a taxon appears at least once:
+
+```{r}
+prevdf <- apply(X = otu_table(ps), MARGIN = ifelse(taxa_are_rows(ps), yes = 1, no = 2), FUN = function(x){sum(x > 0)})
+prevdf <- data.frame(prevalence = prevdf, total_abundance = taxa_sums(ps), tax_table(ps))
+```
+
+Visualize prevalence:
+
+```{r}
+gg <- ggplot(prevdf, aes(total_abundance, prevalence/nsamples(ps), colour = Phylum)) + 
+  geom_point(size = 2, alpha = 0.8) + scale_x_log10() + 
+  xlab("Total abundance") + 
+  ylab("Prevalence (fraction samples)") + 
+  theme_minimal()
+gg
+```
+
+---
+
+### Exercise
+
+Use this visualization to determine your filtering parameters and define them as `prevalence_threshold` and `count_threshold`. Add these parameters to your plot using the functions `geom_hline()` and `geom_vline()`.
+
+```{r, echo = FALSE}
+#prevalence_threshold <- 0.05 * nsamples(ps)
+prevalence_threshold <- 2.5
+count_threshold <- 10*prevalence_threshold
+
+## Plot
+
+gg <- ggplot(prevdf, aes(total_abundance, prevalence/nsamples(ps), colour = Phylum)) + 
+  geom_hline(yintercept = prevalence_threshold/nsamples(ps), linetype = 2) + 
+  geom_vline(xintercept = count_threshold, linetype = 2) + 
+  geom_point(size = 2, alpha = 0.8) + scale_x_log10() + 
+  xlab("Total abundance") + 
+  ylab("Prevalence (fraction samples)") + 
+  theme_minimal()
+gg
+```
+
+---
+
+Define taxa to filter:
+
+```{r}
+keeptaxa <- rownames(prevdf)[(prevdf$prevalence > prevalence_threshold) & (prevdf$total_abundance > count_threshold)]
+```
+
+Execute filter:
+
+Important to keep your unaltered data!
+
+```{r}
+psf <- prune_taxa(keeptaxa, ps)
+```
+
+Compute relative abundance (of both raw and filtered data):
+
+```{r}
+rel <- transform_sample_counts(ps, function(x) x / sum(x))
+
+relf <- transform_sample_counts(psf, function(x) x / sum(x))
+```
+
+### Outlier Detection
+
+First, log transform your count data:
+
+```{r}
+pslog <- transform_sample_counts(psf, function(x) log(1 + x))
+```
+
+Ordinate and get the eigenvalues for axes dimensions:
+
+```{r}
+ord <- ordinate(pslog, method = "PCoA", distance = "bray")
+evals <- ord$values$Eigenvalues
+```
+
+---
+
+### Exercise
+
+Create an ordination plot to check for any obvious outliers. Use the functions `plot_ordination()` and `coord_fixed()` to do this.
+
+```{r, echo = FALSE}
+bb <- plot_ordination(pslog, ord, color = "SampleID") +
+  coord_fixed(sqrt(evals[2]/evals[1])) +
+  theme_minimal() +
+  geom_point(size = 3)
+bb   
+```
+
+Do you think any of these samples are outliers? How could you investigate further?
+
+---
