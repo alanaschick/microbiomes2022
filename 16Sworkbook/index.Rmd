@@ -34,22 +34,22 @@ Time | Topic
 
 Time | Topic                                         
 :-------| :----------------------------------
-13:00  | 5. Denoise
-13:30  | 6. Assign Taxonomy
-14:00  | 7. Phyloseq - Preprocessing
+13:00  | Welcome back and recap
+13:30  | 5. Denoise
 14:30  | Break
-15:00  | 7. Phyloseq - Preprocessing (cont)
-15:30  | 8. Taxonomic Composition
+15:00  | 5. Denoise (cont)
+15:45  | 6. Assign Taxonomy
 16:00  | Finish
 
 ### Day 3 {-}
 
 Time | Topic                                         
 :-------| :----------------------------------
-13:00  | 9. Alpha Diversity
-13:45  | 10. Beta Diversity
+13:00  | 7. Phyloseq - Preprocessing
+14:00  | 8. Taxonomic Composition
 14:30  | Break
-15:00  | 11. Hypothesis Testing
+15:00  | 9. Alpha Diversity
+15:30  | 10. Beta Diversity 
 16:00  | Finish
 
 
