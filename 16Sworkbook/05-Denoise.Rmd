@@ -156,9 +156,9 @@ write.table(summary_tab, file.path(path, "reads_tracked.txt"))
 
 ### Exercise
 
-Make a plot to visualize the results in `reads_tracked.txt`. Something like this:
+Make a plot to visualize the results in `reads_tracked.txt`:
 
-```{r, echo = FALSE}
+```{r}
 summary_tab$Sample <- rownames(summary_tab) 
 summary_tab <- summary_tab %>% separate(Sample, c("Sample", "temp"), sep = "_S") 
 summary_tab$Sample <- factor(summary_tab$Sample, levels = summary_tab$Sample[order(summary_tab$Non.Chimeric)])
@@ -168,7 +168,6 @@ summary_tab_long$QC.Step <- factor(summary_tab_long$QC.Step, levels = c("Input",
 
 gg <- ggplot(summary_tab_long, aes(x = Sample, y = Reads, color = QC.Step)) +
 	geom_point(size = 2) +
-	scale_color_manual(values = rainbow(5, v = 0.8)) +
 	theme_bw() +
 	theme(axis.text.x = element_text(angle = 90))
 gg

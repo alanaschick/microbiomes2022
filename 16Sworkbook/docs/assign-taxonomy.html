@@ -23,7 +23,7 @@
 <meta name="author" content="Alana Schick" />
 
 
-<meta name="date" content="2022-08-17" />
+<meta name="date" content="2022-08-22" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -210,7 +210,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="7.1.1" data-path="phyloseq.html"><a href="phyloseq.html#exercise-8"><i class="fa fa-check"></i><b>7.1.1</b> Exercise</a></li>
 <li class="chapter" data-level="7.1.2" data-path="phyloseq.html"><a href="phyloseq.html#exercise-9"><i class="fa fa-check"></i><b>7.1.2</b> Exercise</a></li>
 </ul></li>
-<li class="chapter" data-level="7.2" data-path="phyloseq.html"><a href="phyloseq.html#preprocess"><i class="fa fa-check"></i><b>7.2</b> Preprocess</a></li>
+<li class="chapter" data-level="7.2" data-path="phyloseq.html"><a href="phyloseq.html#preprocess"><i class="fa fa-check"></i><b>7.2</b> Preprocess</a>
+<ul>
+<li class="chapter" data-level="7.2.1" data-path="phyloseq.html"><a href="phyloseq.html#reads-per-sample"><i class="fa fa-check"></i><b>7.2.1</b> Reads per sample</a></li>
+<li class="chapter" data-level="7.2.2" data-path="phyloseq.html"><a href="phyloseq.html#exercise-10"><i class="fa fa-check"></i><b>7.2.2</b> Exercise</a></li>
+<li class="chapter" data-level="7.2.3" data-path="phyloseq.html"><a href="phyloseq.html#exercise-11"><i class="fa fa-check"></i><b>7.2.3</b> Exercise</a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="phyloseq.html"><a href="phyloseq.html#filtering"><i class="fa fa-check"></i><b>7.3</b> Filtering</a>
+<ul>
+<li class="chapter" data-level="7.3.1" data-path="phyloseq.html"><a href="phyloseq.html#exercise-12"><i class="fa fa-check"></i><b>7.3.1</b> Exercise</a></li>
+<li class="chapter" data-level="7.3.2" data-path="phyloseq.html"><a href="phyloseq.html#outlier-detection"><i class="fa fa-check"></i><b>7.3.2</b> Outlier Detection</a></li>
+<li class="chapter" data-level="7.3.3" data-path="phyloseq.html"><a href="phyloseq.html#exercise-13"><i class="fa fa-check"></i><b>7.3.3</b> Exercise</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="8" data-path="taxonomic-composition.html"><a href="taxonomic-composition.html"><i class="fa fa-check"></i><b>8</b> Taxonomic Composition</a></li>
 <li class="chapter" data-level="9" data-path="alpha-diversity.html"><a href="alpha-diversity.html"><i class="fa fa-check"></i><b>9</b> Alpha Diversity</a></li>
@@ -246,17 +257,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li>silva_nr99_v138.1_train_set.fa.gz</li>
 <li>silva_species_assignment_v138.1.fa.gz</li>
 </ul>
-<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="assign-taxonomy.html#cb55-1" aria-hidden="true" tabindex="-1"></a>path_to_refs <span class="ot">&lt;-</span> <span class="st">&quot;~/Desktop/dropbox_temp/bcch/reference_files&quot;</span></span>
-<span id="cb55-2"><a href="assign-taxonomy.html#cb55-2" aria-hidden="true" tabindex="-1"></a>taxa <span class="ot">&lt;-</span> <span class="fu">assignTaxonomy</span>(seqtab.nochim, <span class="fu">file.path</span>(path_to_refs, <span class="st">&quot;silva_nr99_v138_train_set.fa&quot;</span>), <span class="at">multithread=</span><span class="cn">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="assign-taxonomy.html#cb56-1" aria-hidden="true" tabindex="-1"></a>path_to_refs <span class="ot">&lt;-</span> <span class="st">&quot;~/Desktop/dropbox_temp/bcch/reference_files&quot;</span></span>
+<span id="cb56-2"><a href="assign-taxonomy.html#cb56-2" aria-hidden="true" tabindex="-1"></a>taxa <span class="ot">&lt;-</span> <span class="fu">assignTaxonomy</span>(seqtab.nochim, <span class="fu">file.path</span>(path_to_refs, <span class="st">&quot;silva_nr99_v138_train_set.fa&quot;</span>), <span class="at">multithread=</span><span class="cn">TRUE</span>)</span></code></pre></div>
 <p>The dada2 package also implements a method to make species level assignments based on exact matching between ASVs and sequenced reference strains. Recent analysis suggests that exact matching (or 100% identity) is the only appropriate way to assign species to 16S gene fragments. Currently, species-assignment training fastas are available for the Silva and RDP 16S databases. To follow the optional species addition step, download the silva_species_assignment_v132.fa.gz file, and place it in the directory with the fastq files.</p>
-<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="assign-taxonomy.html#cb56-1" aria-hidden="true" tabindex="-1"></a>taxa <span class="ot">&lt;-</span> <span class="fu">addSpecies</span>(taxa, <span class="fu">file.path</span>(path_to_refs, <span class="st">&quot;silva_species_assignment_v138.fa&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb57-1"><a href="assign-taxonomy.html#cb57-1" aria-hidden="true" tabindex="-1"></a>taxa <span class="ot">&lt;-</span> <span class="fu">addSpecies</span>(taxa, <span class="fu">file.path</span>(path_to_refs, <span class="st">&quot;silva_species_assignment_v138.fa&quot;</span>))</span></code></pre></div>
 <div id="exercise-7" class="section level3 hasAnchor" number="6.1.1">
 <h3><span class="header-section-number">6.1.1</span> Exercise<a href="assign-taxonomy.html#exercise-7" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Look at the usage documentation for the function <code>addSpecies</code>, in particular the option <code>allowMultiple</code>. Considering your research question, do you want to set this parameter to <code>TRUE</code> or <code>FALSE</code>?</p>
 <p>Inspect the taxonomic assignments:</p>
-<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb57-1"><a href="assign-taxonomy.html#cb57-1" aria-hidden="true" tabindex="-1"></a>taxa.print <span class="ot">&lt;-</span> taxa <span class="co"># Removing sequence rownames for display only</span></span>
-<span id="cb57-2"><a href="assign-taxonomy.html#cb57-2" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(taxa.print) <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
-<span id="cb57-3"><a href="assign-taxonomy.html#cb57-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(taxa.print)</span></code></pre></div>
+<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="assign-taxonomy.html#cb58-1" aria-hidden="true" tabindex="-1"></a>taxa.print <span class="ot">&lt;-</span> taxa <span class="co"># Removing sequence rownames for display only</span></span>
+<span id="cb58-2"><a href="assign-taxonomy.html#cb58-2" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(taxa.print) <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb58-3"><a href="assign-taxonomy.html#cb58-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(taxa.print)</span></code></pre></div>
 <pre><code>##      Kingdom    Phylum             Class            Order              
 ## [1,] &quot;Bacteria&quot; &quot;Firmicutes&quot;       &quot;Clostridia&quot;     &quot;Lachnospirales&quot;   
 ## [2,] &quot;Bacteria&quot; &quot;Actinobacteriota&quot; &quot;Actinobacteria&quot; &quot;Bifidobacteriales&quot;
@@ -272,9 +283,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## [5,] &quot;Lachnospiraceae&quot;    &quot;Agathobacter&quot;     NA           
 ## [6,] &quot;Ruminococcaceae&quot;    &quot;Faecalibacterium&quot; &quot;prausnitzii&quot;</code></pre>
 <p>Finally, we’ve reached the end of the <code>dada2</code> pipeline. But first, we need to save the two files we’ve generated:</p>
-<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="assign-taxonomy.html#cb59-1" aria-hidden="true" tabindex="-1"></a>path <span class="ot">&lt;-</span> <span class="st">&quot;~/Desktop/microbiomeworkshop2022/results&quot;</span></span>
-<span id="cb59-2"><a href="assign-taxonomy.html#cb59-2" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(seqtab.nochim, <span class="fu">file.path</span>(path, <span class="st">&quot;seqtab_final.rds&quot;</span>))</span>
-<span id="cb59-3"><a href="assign-taxonomy.html#cb59-3" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(taxa, <span class="fu">file.path</span>(path, <span class="st">&quot;taxa_final.rds&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb60-1"><a href="assign-taxonomy.html#cb60-1" aria-hidden="true" tabindex="-1"></a>path <span class="ot">&lt;-</span> <span class="st">&quot;~/Desktop/microbiomeworkshop2022/results&quot;</span></span>
+<span id="cb60-2"><a href="assign-taxonomy.html#cb60-2" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(seqtab.nochim, <span class="fu">file.path</span>(path, <span class="st">&quot;seqtab_final.rds&quot;</span>))</span>
+<span id="cb60-3"><a href="assign-taxonomy.html#cb60-3" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(taxa, <span class="fu">file.path</span>(path, <span class="st">&quot;taxa_final.rds&quot;</span>))</span></code></pre></div>
 
 </div>
 </div>

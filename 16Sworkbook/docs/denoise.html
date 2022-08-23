@@ -23,7 +23,7 @@
 <meta name="author" content="Alana Schick" />
 
 
-<meta name="date" content="2022-08-17" />
+<meta name="date" content="2022-08-22" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -210,7 +210,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="7.1.1" data-path="phyloseq.html"><a href="phyloseq.html#exercise-8"><i class="fa fa-check"></i><b>7.1.1</b> Exercise</a></li>
 <li class="chapter" data-level="7.1.2" data-path="phyloseq.html"><a href="phyloseq.html#exercise-9"><i class="fa fa-check"></i><b>7.1.2</b> Exercise</a></li>
 </ul></li>
-<li class="chapter" data-level="7.2" data-path="phyloseq.html"><a href="phyloseq.html#preprocess"><i class="fa fa-check"></i><b>7.2</b> Preprocess</a></li>
+<li class="chapter" data-level="7.2" data-path="phyloseq.html"><a href="phyloseq.html#preprocess"><i class="fa fa-check"></i><b>7.2</b> Preprocess</a>
+<ul>
+<li class="chapter" data-level="7.2.1" data-path="phyloseq.html"><a href="phyloseq.html#reads-per-sample"><i class="fa fa-check"></i><b>7.2.1</b> Reads per sample</a></li>
+<li class="chapter" data-level="7.2.2" data-path="phyloseq.html"><a href="phyloseq.html#exercise-10"><i class="fa fa-check"></i><b>7.2.2</b> Exercise</a></li>
+<li class="chapter" data-level="7.2.3" data-path="phyloseq.html"><a href="phyloseq.html#exercise-11"><i class="fa fa-check"></i><b>7.2.3</b> Exercise</a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="phyloseq.html"><a href="phyloseq.html#filtering"><i class="fa fa-check"></i><b>7.3</b> Filtering</a>
+<ul>
+<li class="chapter" data-level="7.3.1" data-path="phyloseq.html"><a href="phyloseq.html#exercise-12"><i class="fa fa-check"></i><b>7.3.1</b> Exercise</a></li>
+<li class="chapter" data-level="7.3.2" data-path="phyloseq.html"><a href="phyloseq.html#outlier-detection"><i class="fa fa-check"></i><b>7.3.2</b> Outlier Detection</a></li>
+<li class="chapter" data-level="7.3.3" data-path="phyloseq.html"><a href="phyloseq.html#exercise-13"><i class="fa fa-check"></i><b>7.3.3</b> Exercise</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="8" data-path="taxonomic-composition.html"><a href="taxonomic-composition.html"><i class="fa fa-check"></i><b>8</b> Taxonomic Composition</a></li>
 <li class="chapter" data-level="9" data-path="alpha-diversity.html"><a href="alpha-diversity.html"><i class="fa fa-check"></i><b>9</b> Alpha Diversity</a></li>
@@ -432,7 +443,19 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb54-12"><a href="denoise.html#cb54-12" aria-hidden="true" tabindex="-1"></a><span class="fu">write.table</span>(summary_tab, <span class="fu">file.path</span>(path, <span class="st">&quot;reads_tracked.txt&quot;</span>))</span></code></pre></div>
 <div id="exercise-6" class="section level3 hasAnchor" number="5.7.1">
 <h3><span class="header-section-number">5.7.1</span> Exercise<a href="denoise.html#exercise-6" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>Make a plot to visualize the results in <code>reads_tracked.txt</code>. Something like this:</p>
+<p>Make a plot to visualize the results in <code>reads_tracked.txt</code>:</p>
+<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="denoise.html#cb55-1" aria-hidden="true" tabindex="-1"></a>summary_tab<span class="sc">$</span>Sample <span class="ot">&lt;-</span> <span class="fu">rownames</span>(summary_tab) </span>
+<span id="cb55-2"><a href="denoise.html#cb55-2" aria-hidden="true" tabindex="-1"></a>summary_tab <span class="ot">&lt;-</span> summary_tab <span class="sc">%&gt;%</span> <span class="fu">separate</span>(Sample, <span class="fu">c</span>(<span class="st">&quot;Sample&quot;</span>, <span class="st">&quot;temp&quot;</span>), <span class="at">sep =</span> <span class="st">&quot;_S&quot;</span>) </span>
+<span id="cb55-3"><a href="denoise.html#cb55-3" aria-hidden="true" tabindex="-1"></a>summary_tab<span class="sc">$</span>Sample <span class="ot">&lt;-</span> <span class="fu">factor</span>(summary_tab<span class="sc">$</span>Sample, <span class="at">levels =</span> summary_tab<span class="sc">$</span>Sample[<span class="fu">order</span>(summary_tab<span class="sc">$</span>Non.Chimeric)])</span>
+<span id="cb55-4"><a href="denoise.html#cb55-4" aria-hidden="true" tabindex="-1"></a>summary_tab_long <span class="ot">&lt;-</span> summary_tab <span class="sc">%&gt;%</span> <span class="fu">gather</span>(<span class="st">&quot;QC.Step&quot;</span>, <span class="st">&quot;Reads&quot;</span>, Input<span class="sc">:</span>Non.Chimeric)</span>
+<span id="cb55-5"><a href="denoise.html#cb55-5" aria-hidden="true" tabindex="-1"></a>summary_tab_long<span class="sc">$</span>QC.Step <span class="ot">&lt;-</span> <span class="fu">factor</span>(summary_tab_long<span class="sc">$</span>QC.Step, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;Input&quot;</span>, <span class="st">&quot;Filtered&quot;</span>, <span class="st">&quot;Denoised&quot;</span>, <span class="st">&quot;Merged&quot;</span>, <span class="st">&quot;Non.Chimeric&quot;</span>))</span>
+<span id="cb55-6"><a href="denoise.html#cb55-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-7"><a href="denoise.html#cb55-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-8"><a href="denoise.html#cb55-8" aria-hidden="true" tabindex="-1"></a>gg <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(summary_tab_long, <span class="fu">aes</span>(<span class="at">x =</span> Sample, <span class="at">y =</span> Reads, <span class="at">color =</span> QC.Step)) <span class="sc">+</span></span>
+<span id="cb55-9"><a href="denoise.html#cb55-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb55-10"><a href="denoise.html#cb55-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb55-11"><a href="denoise.html#cb55-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>))</span>
+<span id="cb55-12"><a href="denoise.html#cb55-12" aria-hidden="true" tabindex="-1"></a>gg</span></code></pre></div>
 <p><img src="16Sworkbook_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
 </div>
 </div>
