@@ -1,8 +1,0 @@
-```{r setup11, include=FALSE} 
-library(dada2)
-library(tidyverse)
-library(phyloseq)
-
-```
-
-# Hypothesis Testing

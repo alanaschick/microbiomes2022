@@ -203,6 +203,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="6.1.1" data-path="assign-taxonomy.html"><a href="assign-taxonomy.html#exercise-7"><i class="fa fa-check"></i><b>6.1.1</b> Exercise</a></li>
 </ul></li>
 </ul></li>
+<li class="part"><span><b>III Day 3</b></span></li>
 <li class="chapter" data-level="7" data-path="phyloseq.html"><a href="phyloseq.html"><i class="fa fa-check"></i><b>7</b> Phyloseq</a>
 <ul>
 <li class="chapter" data-level="7.1" data-path="phyloseq.html"><a href="phyloseq.html#import"><i class="fa fa-check"></i><b>7.1</b> Import</a>
@@ -226,7 +227,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="8" data-path="taxonomic-composition.html"><a href="taxonomic-composition.html"><i class="fa fa-check"></i><b>8</b> Taxonomic Composition</a></li>
 <li class="chapter" data-level="9" data-path="alpha-diversity.html"><a href="alpha-diversity.html"><i class="fa fa-check"></i><b>9</b> Alpha Diversity</a></li>
 <li class="chapter" data-level="10" data-path="beta-diversity.html"><a href="beta-diversity.html"><i class="fa fa-check"></i><b>10</b> Beta Diversity</a></li>
-<li class="chapter" data-level="11" data-path="hypothesis-testing.html"><a href="hypothesis-testing.html"><i class="fa fa-check"></i><b>11</b> Hypothesis Testing</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
 
@@ -257,17 +257,19 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li>silva_nr99_v138.1_train_set.fa.gz</li>
 <li>silva_species_assignment_v138.1.fa.gz</li>
 </ul>
-<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="assign-taxonomy.html#cb56-1" aria-hidden="true" tabindex="-1"></a>path_to_refs <span class="ot">&lt;-</span> <span class="st">&quot;~/Desktop/dropbox_temp/bcch/reference_files&quot;</span></span>
-<span id="cb56-2"><a href="assign-taxonomy.html#cb56-2" aria-hidden="true" tabindex="-1"></a>taxa <span class="ot">&lt;-</span> <span class="fu">assignTaxonomy</span>(seqtab.nochim, <span class="fu">file.path</span>(path_to_refs, <span class="st">&quot;silva_nr99_v138_train_set.fa&quot;</span>), <span class="at">multithread=</span><span class="cn">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="assign-taxonomy.html#cb1-1" aria-hidden="true" tabindex="-1"></a>path_to_refs <span class="ot">&lt;-</span> <span class="st">&quot;~/Desktop/dropbox_temp/bcch/reference_files&quot;</span></span>
+<span id="cb1-2"><a href="assign-taxonomy.html#cb1-2" aria-hidden="true" tabindex="-1"></a>taxa <span class="ot">&lt;-</span> <span class="fu">assignTaxonomy</span>(seqtab.nochim, <span class="fu">file.path</span>(path_to_refs, <span class="st">&quot;silva_nr99_v138_train_set.fa&quot;</span>), <span class="at">multithread=</span><span class="cn">TRUE</span>)</span></code></pre></div>
 <p>The dada2 package also implements a method to make species level assignments based on exact matching between ASVs and sequenced reference strains. Recent analysis suggests that exact matching (or 100% identity) is the only appropriate way to assign species to 16S gene fragments. Currently, species-assignment training fastas are available for the Silva and RDP 16S databases. To follow the optional species addition step, download the silva_species_assignment_v132.fa.gz file, and place it in the directory with the fastq files.</p>
-<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb57-1"><a href="assign-taxonomy.html#cb57-1" aria-hidden="true" tabindex="-1"></a>taxa <span class="ot">&lt;-</span> <span class="fu">addSpecies</span>(taxa, <span class="fu">file.path</span>(path_to_refs, <span class="st">&quot;silva_species_assignment_v138.fa&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="assign-taxonomy.html#cb2-1" aria-hidden="true" tabindex="-1"></a>taxa <span class="ot">&lt;-</span> <span class="fu">addSpecies</span>(taxa, <span class="fu">file.path</span>(path_to_refs, <span class="st">&quot;silva_species_assignment_v138.fa&quot;</span>))</span></code></pre></div>
+<hr />
 <div id="exercise-7" class="section level3 hasAnchor" number="6.1.1">
 <h3><span class="header-section-number">6.1.1</span> Exercise<a href="assign-taxonomy.html#exercise-7" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Look at the usage documentation for the function <code>addSpecies</code>, in particular the option <code>allowMultiple</code>. Considering your research question, do you want to set this parameter to <code>TRUE</code> or <code>FALSE</code>?</p>
+<hr />
 <p>Inspect the taxonomic assignments:</p>
-<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="assign-taxonomy.html#cb58-1" aria-hidden="true" tabindex="-1"></a>taxa.print <span class="ot">&lt;-</span> taxa <span class="co"># Removing sequence rownames for display only</span></span>
-<span id="cb58-2"><a href="assign-taxonomy.html#cb58-2" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(taxa.print) <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
-<span id="cb58-3"><a href="assign-taxonomy.html#cb58-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(taxa.print)</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="assign-taxonomy.html#cb3-1" aria-hidden="true" tabindex="-1"></a>taxa.print <span class="ot">&lt;-</span> taxa <span class="co"># Removing sequence rownames for display only</span></span>
+<span id="cb3-2"><a href="assign-taxonomy.html#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(taxa.print) <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb3-3"><a href="assign-taxonomy.html#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(taxa.print)</span></code></pre></div>
 <pre><code>##      Kingdom    Phylum             Class            Order              
 ## [1,] &quot;Bacteria&quot; &quot;Firmicutes&quot;       &quot;Clostridia&quot;     &quot;Lachnospirales&quot;   
 ## [2,] &quot;Bacteria&quot; &quot;Actinobacteriota&quot; &quot;Actinobacteria&quot; &quot;Bifidobacteriales&quot;
@@ -283,13 +285,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## [5,] &quot;Lachnospiraceae&quot;    &quot;Agathobacter&quot;     NA           
 ## [6,] &quot;Ruminococcaceae&quot;    &quot;Faecalibacterium&quot; &quot;prausnitzii&quot;</code></pre>
 <p>Finally, we’ve reached the end of the <code>dada2</code> pipeline. But first, we need to save the two files we’ve generated:</p>
-<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb60-1"><a href="assign-taxonomy.html#cb60-1" aria-hidden="true" tabindex="-1"></a>path <span class="ot">&lt;-</span> <span class="st">&quot;~/Desktop/microbiomeworkshop2022/results&quot;</span></span>
-<span id="cb60-2"><a href="assign-taxonomy.html#cb60-2" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(seqtab.nochim, <span class="fu">file.path</span>(path, <span class="st">&quot;seqtab_final.rds&quot;</span>))</span>
-<span id="cb60-3"><a href="assign-taxonomy.html#cb60-3" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(taxa, <span class="fu">file.path</span>(path, <span class="st">&quot;taxa_final.rds&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="assign-taxonomy.html#cb5-1" aria-hidden="true" tabindex="-1"></a>path <span class="ot">&lt;-</span> <span class="st">&quot;~/Desktop/microbiomeworkshop2022/results&quot;</span></span>
+<span id="cb5-2"><a href="assign-taxonomy.html#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(seqtab.nochim, <span class="fu">file.path</span>(path, <span class="st">&quot;seqtab_final.rds&quot;</span>))</span>
+<span id="cb5-3"><a href="assign-taxonomy.html#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(taxa, <span class="fu">file.path</span>(path, <span class="st">&quot;taxa_final.rds&quot;</span>))</span></code></pre></div>
 
 </div>
 </div>
 </div>
+
+
+
             </section>
 
           </div>

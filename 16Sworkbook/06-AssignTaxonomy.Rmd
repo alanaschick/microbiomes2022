@@ -1,0 +1,58 @@
+```{r setup6, include=FALSE} 
+library(dada2)
+library(tidyverse)
+library(phyloseq)
+
+path <- "~/Desktop/microbiomeworkshop2022/results"
+seqtab.nochim <- readRDS(file.path(path, "seqtab_final.rds"))
+```
+
+# Assign Taxonomy
+
+We will use the function `assignTaxonony` to assign taxonomy to the sequence variants. This function takes as input a set of sequences to be classified and a training set of reference sequences with known taxonomy, and outputs taxonomic assignment with at least `minBoot` bootstrap confidence. 
+
+## Download the database
+
+Download the following databases from the [Silva website](https://zenodo.org/record/4587955#.YtYY2C2cZo4):
+
+- silva_nr99_v138.1_train_set.fa.gz
+- silva_species_assignment_v138.1.fa.gz
+
+```{r}
+path_to_refs <- "~/Desktop/dropbox_temp/bcch/reference_files"
+taxa <- assignTaxonomy(seqtab.nochim, file.path(path_to_refs, "silva_nr99_v138_train_set.fa"), multithread=TRUE)
+
+```
+
+The dada2 package also implements a method to make species level assignments based on exact matching between ASVs and sequenced reference strains. Recent analysis suggests that exact matching (or 100% identity) is the only appropriate way to assign species to 16S gene fragments. Currently, species-assignment training fastas are available for the Silva and RDP 16S databases. To follow the optional species addition step, download the silva_species_assignment_v132.fa.gz file, and place it in the directory with the fastq files.
+
+```{r}
+taxa <- addSpecies(taxa, file.path(path_to_refs, "silva_species_assignment_v138.fa"))
+
+```
+
+---
+
+### Exercise
+
+Look at the usage documentation for the function `addSpecies`, in particular the option `allowMultiple`. Considering your research question, do you want to set this parameter to `TRUE` or `FALSE`? 
+
+---
+
+Inspect the taxonomic assignments:
+
+```{r}
+taxa.print <- taxa # Removing sequence rownames for display only
+rownames(taxa.print) <- NULL
+head(taxa.print)
+```
+
+Finally, we've reached the end of the `dada2` pipeline. But first, we need to save the two files we've generated:
+
+```{r}
+path <- "~/Desktop/microbiomeworkshop2022/results"
+saveRDS(seqtab.nochim, file.path(path, "seqtab_final.rds"))
+saveRDS(taxa, file.path(path, "taxa_final.rds"))
+```
+
+
