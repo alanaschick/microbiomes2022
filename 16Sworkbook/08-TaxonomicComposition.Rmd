@@ -54,7 +54,7 @@ Start by agglomerating the AVSs to whatever taxonomic level you're interested in
 phy <- tax_glom(psf, "Phylum")
 ```
 
-```{r}
+```{r, echo = FALSE}
 
 ## Normalize to relative abundance
 phyrel <- transform_sample_counts(phy, function(x) x/sum(x))
