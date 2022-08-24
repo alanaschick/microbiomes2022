@@ -73,3 +73,6 @@ filtering
 exercise-12
 outlier-detection
 exercise-13
+exercise-14
+exercise-15
+exercise-16

@@ -47,6 +47,8 @@ relf <- transform_sample_counts(psf, function(x) x / sum(x))
 
 Phyloseq has several functions built in for the analysis of microbiome data (complete with well-documented tutorials). 
 
+First, we make some composition plots of the samples to get a good idea of what's in them. 
+
 Start by agglomerating the AVSs to whatever taxonomic level you're interested in. You can do this with the `tax_glom()` function.
 
 ```{r}
@@ -54,15 +56,100 @@ Start by agglomerating the AVSs to whatever taxonomic level you're interested in
 phy <- tax_glom(psf, "Phylum")
 ```
 
-```{r, echo = FALSE}
+---
 
+### Exercise
+
+A - What other data transformations do you think are necessary? Have a closer look at `otu_table(phy)` to give you an idea. 
+
+```{r, echo = FALSE}
 ## Normalize to relative abundance
 phyrel <- transform_sample_counts(phy, function(x) x/sum(x))
+```
 
+B - Use the `plot_bar()` function to generate a bar plot for the phylum level composition. 
+
+```{r, echo = FALSE}
 phycomp <- plot_bar(phyrel, x = "SampleID", fill = "Phylum") + 
-  theme(axis.text.x = element_text(angle = 0, hjust = 0.5)) + 
   theme_bw() + xlab("Sample") + ylab("Relative abundance") +
   theme(axis.text.x = element_text(size = 8, angle = 90, vjust = 0.5))
 phycomp
-
 ```
+
+C - Use the `psmelt()`  and `ggplot()` functions to generate the same bar plot. 
+
+```{r, echo = FALSE}
+phymelt <- psmelt(phyrel)
+
+phycomp <- ggplot(phymelt, aes(x = SampleID, y = Abundance, fill = Phylum)) +
+  theme_bw() + geom_bar(stat = "identity") + xlab("Sample") + ylab("Relative abundance") +
+  theme(axis.text.x = element_text(size = 8, angle = 90, vjust = 0.5))
+# phycomp
+```
+
+---
+  
+When we look at lower levels of taxonomy (like genus), it is impractical to plot all genera found. It would look like this:
+
+```{r, echo = FALSE}
+gen <- tax_glom(psf, "Genus")
+genrel <- transform_sample_counts(gen, function(x) x/sum(x))
+gencomp <- plot_bar(genrel, x = "SampleID", fill = "Genus") + 
+  theme_bw() + xlab("Sample") + ylab("Relative abundance") +
+  theme(axis.text.x = element_text(size = 8, angle = 90, vjust = 0.5)) +
+  theme(legend.position = "none")
+gencomp
+```
+
+---
+
+### Exercise
+
+A - Create a new phyloseq object that contains only the top 10 most abundant genera. 
+
+Strong hints: use the function `sort()` to order the genera, then subset the top 20. Following that, use the function `prune_taxa()` to create the new phyloseq object. 
+
+
+```{r, echo = FALSE}
+## Take top 20 most abundant genera
+top10 <- names(sort(taxa_sums(genrel), TRUE))[1:10]
+gen10 <- prune_taxa(top10, genrel)
+
+gencomp <- plot_bar(gen10, x = "SampleID", fill = "Genus") + 
+  theme_bw() + xlab("Sample") + ylab("Relative abundance") +
+  theme(axis.text.x = element_text(size = 8, angle = 90, vjust = 0.5))
+gencomp
+```
+
+B - Change the color of the bars!
+
+See this page for inspiration:
+https://www.nceas.ucsb.edu/sites/default/files/2020-04/colorPaletteCheatsheet.pdf
+
+---
+
+Lastly, we sometimes want to look at differences between groups, based on the metadata. 
+
+---
+
+### Exercise
+
+Use the function `facet_wrap()` to group the samples by:
+
+A - Treatment
+
+B - Timepoint
+
+C - Treatment **and** SubjectID
+
+With the goal or producing a summary like this:
+ 
+```{r, echo = FALSE}
+gencomp <- plot_bar(gen10, x = "SampleID", fill = "Genus") + 
+  theme_minimal() + xlab("Sample") + ylab("Relative abundance") +
+  theme(axis.text.x = element_text(size = 8, angle = 90, vjust = 0.5)) + facet_wrap(~Treatment*SubjectID, nrow = 1, scales = "free_x") +
+  scale_fill_manual(values = sample(rainbow(n = 10, v = 0.8)))
+gencomp
+```
+
+---

@@ -23,7 +23,7 @@
 <meta name="author" content="Alana Schick" />
 
 
-<meta name="date" content="2022-08-23" />
+<meta name="date" content="2022-08-24" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -224,7 +224,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="7.3.3" data-path="phyloseq.html"><a href="phyloseq.html#exercise-13"><i class="fa fa-check"></i><b>7.3.3</b> Exercise</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="8" data-path="taxonomic-composition.html"><a href="taxonomic-composition.html"><i class="fa fa-check"></i><b>8</b> Taxonomic Composition</a></li>
+<li class="chapter" data-level="8" data-path="taxonomic-composition.html"><a href="taxonomic-composition.html"><i class="fa fa-check"></i><b>8</b> Taxonomic Composition</a>
+<ul>
+<li class="chapter" data-level="8.0.1" data-path="taxonomic-composition.html"><a href="taxonomic-composition.html#exercise-14"><i class="fa fa-check"></i><b>8.0.1</b> Exercise</a></li>
+<li class="chapter" data-level="8.0.2" data-path="taxonomic-composition.html"><a href="taxonomic-composition.html#exercise-15"><i class="fa fa-check"></i><b>8.0.2</b> Exercise</a></li>
+<li class="chapter" data-level="8.0.3" data-path="taxonomic-composition.html"><a href="taxonomic-composition.html#exercise-16"><i class="fa fa-check"></i><b>8.0.3</b> Exercise</a></li>
+</ul></li>
 <li class="chapter" data-level="9" data-path="alpha-diversity.html"><a href="alpha-diversity.html"><i class="fa fa-check"></i><b>9</b> Alpha Diversity</a></li>
 <li class="chapter" data-level="10" data-path="beta-diversity.html"><a href="beta-diversity.html"><i class="fa fa-check"></i><b>10</b> Beta Diversity</a></li>
 <li class="divider"></li>
@@ -250,11 +255,45 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="taxonomic-composition" class="section level1 hasAnchor" number="8">
 <h1><span class="header-section-number">8</span> Taxonomic Composition<a href="taxonomic-composition.html#taxonomic-composition" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <p>Phyloseq has several functions built in for the analysis of microbiome data (complete with well-documented tutorials).</p>
+<p>First, we make some composition plots of the samples to get a good idea of what’s in them.</p>
 <p>Start by agglomerating the AVSs to whatever taxonomic level you’re interested in. You can do this with the <code>tax_glom()</code> function.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="taxonomic-composition.html#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Aggolomerate to Phylum level</span></span>
 <span id="cb1-2"><a href="taxonomic-composition.html#cb1-2" aria-hidden="true" tabindex="-1"></a>phy <span class="ot">&lt;-</span> <span class="fu">tax_glom</span>(psf, <span class="st">&quot;Phylum&quot;</span>)</span></code></pre></div>
-<p><img src="16Sworkbook_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<hr />
+<div id="exercise-14" class="section level3 hasAnchor" number="8.0.1">
+<h3><span class="header-section-number">8.0.1</span> Exercise<a href="taxonomic-composition.html#exercise-14" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>A - What other data transformations do you think are necessary? Have a closer look at <code>otu_table(phy)</code> to give you an idea.</p>
+<p>B - Use the <code>plot_bar()</code> function to generate a bar plot for the phylum level composition.</p>
+<p><img src="16Sworkbook_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p>C - Use the <code>psmelt()</code> and <code>ggplot()</code> functions to generate the same bar plot.</p>
+<hr />
+<p>When we look at lower levels of taxonomy (like genus), it is impractical to plot all genera found. It would look like this:</p>
+<p><img src="16Sworkbook_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<hr />
+</div>
+<div id="exercise-15" class="section level3 hasAnchor" number="8.0.2">
+<h3><span class="header-section-number">8.0.2</span> Exercise<a href="taxonomic-composition.html#exercise-15" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>A - Create a new phyloseq object that contains only the top 10 most abundant genera.</p>
+<p>Strong hints: use the function <code>sort()</code> to order the genera, then subset the top 20. Following that, use the function <code>prune_taxa()</code> to create the new phyloseq object.</p>
+<p><img src="16Sworkbook_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p>B - Change the color of the bars!</p>
+<p>See this page for inspiration:
+<a href="https://www.nceas.ucsb.edu/sites/default/files/2020-04/colorPaletteCheatsheet.pdf" class="uri">https://www.nceas.ucsb.edu/sites/default/files/2020-04/colorPaletteCheatsheet.pdf</a></p>
+<hr />
+<p>Lastly, we sometimes want to look at differences between groups, based on the metadata.</p>
+<hr />
+</div>
+<div id="exercise-16" class="section level3 hasAnchor" number="8.0.3">
+<h3><span class="header-section-number">8.0.3</span> Exercise<a href="taxonomic-composition.html#exercise-16" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Use the function <code>facet_wrap()</code> to group the samples by:</p>
+<p>A - Treatment</p>
+<p>B - Timepoint</p>
+<p>C - Treatment <strong>and</strong> SubjectID</p>
+<p>With the goal or producing a summary like this:</p>
+<p><img src="16Sworkbook_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<hr />
 
+</div>
 </div>
             </section>
 
