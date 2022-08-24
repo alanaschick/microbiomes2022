@@ -3,6 +3,66 @@ library(dada2)
 library(tidyverse)
 library(phyloseq)
 
+path <- "~/Desktop/microbiomeworkshop2022/"
+
+## Read in files
+seqtab <- readRDS(file.path(path, "results/seqtab_final.rds"))
+taxa <- readRDS(file.path(path, "results/taxa_final.rds"))
+
+info <- read.table(file.path(path, "project_metadata.txt"), header = TRUE)
+
+## Name rows after Sample ID
+rownames(info) <- info$SampleID
+
+info <- info %>% separate(SampleID, c("SampleID", "temp"), sep = "_S")
+
+ps <- phyloseq(otu_table(seqtab, taxa_are_rows=FALSE), sample_data(info), tax_table(taxa))
+ps
+
+asv_names <- vector(dim(otu_table(ps))[2], mode = "character")
+for (i in 1:dim(otu_table(ps))[2]){
+	asv_names[i] <- paste("ASV", i, sep = "_")
+}
+taxa_names(ps) <- asv_names
+colnames(otu_table(ps)) <- asv_names
+rownames(tax_table(ps)) <- asv_names
+
+prevdf <- apply(X = otu_table(ps), MARGIN = ifelse(taxa_are_rows(ps), yes = 1, no = 2), FUN = function(x){sum(x > 0)})
+prevdf <- data.frame(prevalence = prevdf, total_abundance = taxa_sums(ps), tax_table(ps))
+
+prevalence_threshold <- 2.5
+count_threshold <- 10*prevalence_threshold
+
+keeptaxa <- rownames(prevdf)[(prevdf$prevalence > prevalence_threshold) & (prevdf$total_abundance > count_threshold)]
+
+psf <- prune_taxa(keeptaxa, ps)
+
+rel <- transform_sample_counts(ps, function(x) x / sum(x))
+
+relf <- transform_sample_counts(psf, function(x) x / sum(x))
+
 ```
 
 # Taxonomic Composition
+
+Phyloseq has several functions built in for the analysis of microbiome data (complete with well-documented tutorials). 
+
+Start by agglomerating the AVSs to whatever taxonomic level you're interested in. You can do this with the `tax_glom()` function.
+
+```{r}
+## Aggolomerate to Phylum level
+phy <- tax_glom(psf, "Phylum")
+```
+
+```{r}
+
+## Normalize to relative abundance
+phyrel <- transform_sample_counts(phy, function(x) x/sum(x))
+
+phycomp <- plot_bar(phyrel, x = "SampleID", fill = "Phylum") + 
+  theme(axis.text.x = element_text(angle = 0, hjust = 0.5)) + 
+  theme_bw() + xlab("Sample") + ylab("Relative abundance") +
+  theme(axis.text.x = element_text(size = 8, angle = 90, vjust = 0.5))
+phycomp
+
+```
