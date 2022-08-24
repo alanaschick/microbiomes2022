@@ -77,3 +77,7 @@ exercise-14
 exercise-15
 exercise-16
 exercise-17
+visualization
+alpha-diversity-1
+exercise-18
+beta-diversity-1
