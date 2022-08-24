@@ -109,7 +109,7 @@ gencomp
 
 A - Create a new phyloseq object that contains only the top 10 most abundant genera. 
 
-Strong hints: use the function `sort()` to order the genera, then subset the top 20. Following that, use the function `prune_taxa()` to create the new phyloseq object. 
+Strong hints: use the function `sort()` to order the genera, then subset the top 10. Following that, use the function `prune_taxa()` to create the new phyloseq object. 
 
 
 ```{r, echo = FALSE}
@@ -158,7 +158,19 @@ gencomp
 
 ## Alpha Diversity
 
-One common way to summarize metagenome results is to report a value of alpha diversity. This concept comes from ecology and there are several ways to measure the diversity within a sample. 
+Diversity estimates are a central topic in microbimoe data analysis. Many different ways for estimating such diversity measurements have been described in the literature, mostly from community ecology. 
+
+Here we look at a few of these measurements. Which measurement is best or most applicable to your study is not the aim of this section.
+
+**Alpha diversity** summarizes the distribution of species abundance in a given sample into a single number that depends on species richness and evenness. 
+
+**Richness** refers to the total number of species in a community (sample). The simplest richness index is the number of observed species (observed richness). Assuming limited sampling from the community, however, this may underestimate the true species richness. Several estimators are available, including for instance ACE and Chao1. Richness estimates are unaffected by species abundances.
+
+**Evenness** focuses on species abundances, and can thus complement the number of species. A typical evenness index is the Pielou’s evenness, which is Shannon diversity normalized by the observed richness.
+
+A number of ecological diversity measures combine richness and evenness into a single number, including inverse Simpson and Shannon. 
+
+In `phyloseq`, the function `estimate_richness()` applies a variety of these measurements to  your phyloseq object. 
 
 ---
 
@@ -170,15 +182,98 @@ B - Create a data frame containing the results of the `estimate_richness()` func
 
 C - Create a data frame containing the sample metadata and the measures of alpha diversity you are interested in. 
 
-D - 
+D - Plot your results. Functions that may help include: `geom_jitter()` and `stat_summary()`. 
+
+```{r, echo = FALSE}
+sample_data(ps)$Timepoint <- as.factor(sample_data(ps)$Timepoint)
+alpha <- estimate_richness(ps)
+aa <- cbind(alpha, sample_data(ps))
+
+all <- aa %>% gather(key = "Metric", value = "AlphaDiversity", c("Observed", "Shannon", "ACE", "InvSimpson"))
+
+
+
+a1 <- ggplot(all, aes(x = Timepoint, y = AlphaDiversity, fill = Treatment)) +
+  geom_jitter(color = "black", size = 3, pch = 21, height = 0, width = 0.1) +
+  theme_minimal() +
+  facet_wrap(Metric~Treatment, scales = "free", nrow = 2) +
+  scale_fill_manual(values = c("blue", "darkgrey")) +
+  stat_summary(fun = base::mean, geom = "point", shape = "_", size = 6, position = position_dodge(width = 0.75))
+a1
+
+```
+
+E - Does treatment seem to have an effect on alpha diversity? 
 
 ---
 
-```{r, echo = FALSE}
-alpha <- estimate_richness(ps)
-aa <- cbind(alpha, sample_data(ps))
+## Beta Diversity
+
+Where alpha diveristy focuses on diversity variation within a community (sample), beta diversity quantifies diversity **between communities (samples**. Some of the most popular beta diversity measures in microbiome research include Bray-Curtis index (for compositional data), Jaccard index (for presence/absence data, ignoring abundance information).
+
+Beta diversities are usually represented as `dist` objects, which contain triangular data describing the distance between each pair of samples. These distances can be further subjected to ordination. Ordination is a common concept in ecology that aims to reduce the dimensionsionality of the data for further evaluation or visualization. Ordination techniques aim to capture as much of essential information in the data as possible in a lower dimensional representation. Dimension reduction is bound to lose information but the common ordination techniques aim to preserve relevant information of sample similarities in an optimal way.
+
+Some of the most common ordination methods in microbiome research include Principal Component Analysis (PCA), metric and non-metric multi-dimensional scaling (MDS, NMDS). The MDS methods is also known as Principal Coordinates Analysis (PCoA).
+
+Let's start with a basic ordination plot (as before):
+
+```{r}
+pslog <- transform_sample_counts(psf, function(x) log(1 + x))
+ord <- ordinate(pslog, method = "PCoA", distance = "bray")
+
+bb <- plot_ordination(pslog, ord, color = "SampleID") +
+  theme_bw() +
+  geom_point(size = 3)
+bb 
 ```
 
-## Beta Diversity
+The percentage of **explained variance** is typically shown for PCoA plots. This quantifies the proportion of overall variance in the data that is captured by the axes, or how well the ordination axes reflect the original distances. 
+
+For this reason, it is essential that the dimensions of our ordination plot represent the relative contributions of our axes. We can accomplish this by extracting the eigenvalues and using the function `coord_fixed()`.
+
+```{r}
+evals <- ord$values$Eigenvalues
+
+bb <- plot_ordination(pslog, ord, color = "SampleID") +
+  theme_bw() +
+  geom_point(size = 3) +
+  coord_fixed(sqrt(evals[2]/evals[1]))
+bb  
+```
+
+---
+
+### Exercise
+
+A - Create an ordination plot using relative abundance instead of a log transformation. 
+
+```{r, echo = FALSE}
+ord <- ordinate(relf, method = "PCoA", distance = "bray")
+evals <- ord$values$Eigenvalues
+
+bb <- plot_ordination(relf, ord, color = "SampleID") +
+  theme_bw() +
+  geom_point(size = 3) +
+  coord_fixed(sqrt(evals[2]/evals[1]))
+#bb  
+```
+
+B - Create an ordination plot using count data.
+
+```{r, echo = FALSE}
+ord <- ordinate(psf, method = "PCoA", distance = "bray")
+evals <- ord$values$Eigenvalues
+
+bb <- plot_ordination(psf, ord, color = "SampleID") +
+  theme_bw() +
+  geom_point(size = 3) +
+  coord_fixed(sqrt(evals[2]/evals[1]))
+#bb  
+```
+
+C - Change the color aesthetic and/or `facet_wrap()` to investigate the effect of Treatment and Timepoint on composition.
+
+---
+
 
 

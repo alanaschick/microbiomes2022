@@ -208,18 +208,16 @@ Ordinate and get the eigenvalues for axes dimensions:
 
 ```{r}
 ord <- ordinate(pslog, method = "PCoA", distance = "bray")
-evals <- ord$values$Eigenvalues
 ```
 
 ---
 
 ### Exercise
 
-Create an ordination plot to check for any obvious outliers. Use the functions `plot_ordination()` and `coord_fixed()` to do this.
+Create an ordination plot to check for any obvious outliers. Use the function `plot_ordination()` to do this.
 
 ```{r, echo = FALSE}
 bb <- plot_ordination(pslog, ord, color = "SampleID") +
-  coord_fixed(sqrt(evals[2]/evals[1])) +
   theme_minimal() +
   geom_point(size = 3)
 bb   

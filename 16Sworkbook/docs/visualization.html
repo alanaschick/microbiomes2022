@@ -236,7 +236,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="8.2.1" data-path="visualization.html"><a href="visualization.html#exercise-17"><i class="fa fa-check"></i><b>8.2.1</b> Exercise</a></li>
 </ul></li>
-<li class="chapter" data-level="8.3" data-path="visualization.html"><a href="visualization.html#beta-diversity"><i class="fa fa-check"></i><b>8.3</b> Beta Diversity</a></li>
+<li class="chapter" data-level="8.3" data-path="visualization.html"><a href="visualization.html#beta-diversity"><i class="fa fa-check"></i><b>8.3</b> Beta Diversity</a>
+<ul>
+<li class="chapter" data-level="8.3.1" data-path="visualization.html"><a href="visualization.html#exercise-18"><i class="fa fa-check"></i><b>8.3.1</b> Exercise</a></li>
+</ul></li>
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -282,7 +285,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="exercise-15" class="section level3 hasAnchor" number="8.1.2">
 <h3><span class="header-section-number">8.1.2</span> Exercise<a href="visualization.html#exercise-15" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>A - Create a new phyloseq object that contains only the top 10 most abundant genera.</p>
-<p>Strong hints: use the function <code>sort()</code> to order the genera, then subset the top 20. Following that, use the function <code>prune_taxa()</code> to create the new phyloseq object.</p>
+<p>Strong hints: use the function <code>sort()</code> to order the genera, then subset the top 10. Following that, use the function <code>prune_taxa()</code> to create the new phyloseq object.</p>
 <p><img src="16Sworkbook_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
 <p>B - Change the color of the bars!</p>
 <p>See this page for inspiration:
@@ -304,20 +307,58 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="alpha-diversity" class="section level2 hasAnchor" number="8.2">
 <h2><span class="header-section-number">8.2</span> Alpha Diversity<a href="visualization.html#alpha-diversity" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>One common way to summarize metagenome results is to report a value of alpha diversity. This concept comes from ecology and there are several ways to measure the diversity within a sample.</p>
+<p>Diversity estimates are a central topic in microbimoe data analysis. Many different ways for estimating such diversity measurements have been described in the literature, mostly from community ecology.</p>
+<p>Here we look at a few of these measurements. Which measurement is best or most applicable to your study is not the aim of this section.</p>
+<p><strong>Alpha diversity</strong> summarizes the distribution of species abundance in a given sample into a single number that depends on species richness and evenness.</p>
+<p><strong>Richness</strong> refers to the total number of species in a community (sample). The simplest richness index is the number of observed species (observed richness). Assuming limited sampling from the community, however, this may underestimate the true species richness. Several estimators are available, including for instance ACE and Chao1. Richness estimates are unaffected by species abundances.</p>
+<p><strong>Evenness</strong> focuses on species abundances, and can thus complement the number of species. A typical evenness index is the Pielou’s evenness, which is Shannon diversity normalized by the observed richness.</p>
+<p>A number of ecological diversity measures combine richness and evenness into a single number, including inverse Simpson and Shannon.</p>
+<p>In <code>phyloseq</code>, the function <code>estimate_richness()</code> applies a variety of these measurements to your phyloseq object.</p>
 <hr />
 <div id="exercise-17" class="section level3 hasAnchor" number="8.2.1">
 <h3><span class="header-section-number">8.2.1</span> Exercise<a href="visualization.html#exercise-17" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>A - Read the R documentation for the phyloseq function <code>estimate_richness()</code>.</p>
 <p>B - Create a data frame containing the results of the <code>estimate_richness()</code> function and the measures of alpha diveristy you are interested in.</p>
 <p>C - Create a data frame containing the sample metadata and the measures of alpha diversity you are interested in.</p>
-<p>D -</p>
+<p>D - Plot your results. Functions that may help include: <code>geom_jitter()</code> and <code>stat_summary()</code>.</p>
+<p><img src="16Sworkbook_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p>E - Does treatment seem to have an effect on alpha diversity?</p>
 <hr />
 </div>
 </div>
 <div id="beta-diversity" class="section level2 hasAnchor" number="8.3">
 <h2><span class="header-section-number">8.3</span> Beta Diversity<a href="visualization.html#beta-diversity" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Where alpha diveristy focuses on diversity variation within a community (sample), beta diversity quantifies diversity <strong>between communities (samples</strong>. Some of the most popular beta diversity measures in microbiome research include Bray-Curtis index (for compositional data), Jaccard index (for presence/absence data, ignoring abundance information).</p>
+<p>Beta diversities are usually represented as <code>dist</code> objects, which contain triangular data describing the distance between each pair of samples. These distances can be further subjected to ordination. Ordination is a common concept in ecology that aims to reduce the dimensionsionality of the data for further evaluation or visualization. Ordination techniques aim to capture as much of essential information in the data as possible in a lower dimensional representation. Dimension reduction is bound to lose information but the common ordination techniques aim to preserve relevant information of sample similarities in an optimal way.</p>
+<p>Some of the most common ordination methods in microbiome research include Principal Component Analysis (PCA), metric and non-metric multi-dimensional scaling (MDS, NMDS). The MDS methods is also known as Principal Coordinates Analysis (PCoA).</p>
+<p>Let’s start with a basic ordination plot (as before):</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="visualization.html#cb2-1" aria-hidden="true" tabindex="-1"></a>pslog <span class="ot">&lt;-</span> <span class="fu">transform_sample_counts</span>(psf, <span class="cf">function</span>(x) <span class="fu">log</span>(<span class="dv">1</span> <span class="sc">+</span> x))</span>
+<span id="cb2-2"><a href="visualization.html#cb2-2" aria-hidden="true" tabindex="-1"></a>ord <span class="ot">&lt;-</span> <span class="fu">ordinate</span>(pslog, <span class="at">method =</span> <span class="st">&quot;PCoA&quot;</span>, <span class="at">distance =</span> <span class="st">&quot;bray&quot;</span>)</span>
+<span id="cb2-3"><a href="visualization.html#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="visualization.html#cb2-4" aria-hidden="true" tabindex="-1"></a>bb <span class="ot">&lt;-</span> <span class="fu">plot_ordination</span>(pslog, ord, <span class="at">color =</span> <span class="st">&quot;SampleID&quot;</span>) <span class="sc">+</span></span>
+<span id="cb2-5"><a href="visualization.html#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb2-6"><a href="visualization.html#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">3</span>)</span>
+<span id="cb2-7"><a href="visualization.html#cb2-7" aria-hidden="true" tabindex="-1"></a>bb </span></code></pre></div>
+<p><img src="16Sworkbook_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p>The percentage of <strong>explained variance</strong> is typically shown for PCoA plots. This quantifies the proportion of overall variance in the data that is captured by the axes, or how well the ordination axes reflect the original distances.</p>
+<p>For this reason, it is essential that the dimensions of our ordination plot represent the relative contributions of our axes. We can accomplish this by extracting the eigenvalues and using the function <code>coord_fixed()</code>.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="visualization.html#cb3-1" aria-hidden="true" tabindex="-1"></a>evals <span class="ot">&lt;-</span> ord<span class="sc">$</span>values<span class="sc">$</span>Eigenvalues</span>
+<span id="cb3-2"><a href="visualization.html#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="visualization.html#cb3-3" aria-hidden="true" tabindex="-1"></a>bb <span class="ot">&lt;-</span> <span class="fu">plot_ordination</span>(pslog, ord, <span class="at">color =</span> <span class="st">&quot;SampleID&quot;</span>) <span class="sc">+</span></span>
+<span id="cb3-4"><a href="visualization.html#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb3-5"><a href="visualization.html#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb3-6"><a href="visualization.html#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_fixed</span>(<span class="fu">sqrt</span>(evals[<span class="dv">2</span>]<span class="sc">/</span>evals[<span class="dv">1</span>]))</span>
+<span id="cb3-7"><a href="visualization.html#cb3-7" aria-hidden="true" tabindex="-1"></a>bb  </span></code></pre></div>
+<p><img src="16Sworkbook_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<hr />
+<div id="exercise-18" class="section level3 hasAnchor" number="8.3.1">
+<h3><span class="header-section-number">8.3.1</span> Exercise<a href="visualization.html#exercise-18" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>A - Create an ordination plot using relative abundance instead of a log transformation.</p>
+<p>B - Create an ordination plot using count data.</p>
+<p>C - Change the color aesthetic and/or <code>facet_wrap()</code> to investigate the effect of Treatment and Timepoint on composition.</p>
+<hr />
 
+</div>
 </div>
 </div>
             </section>
