@@ -3,6 +3,64 @@ library(dada2)
 library(tidyverse)
 library(phyloseq)
 
+path <- "~/Desktop/microbiomeworkshop2022/"
+
+## Read in files
+seqtab <- readRDS(file.path(path, "results/seqtab_final.rds"))
+taxa <- readRDS(file.path(path, "results/taxa_final.rds"))
+
+info <- read.table(file.path(path, "project_metadata.txt"), header = TRUE)
+
+## Name rows after Sample ID
+rownames(info) <- info$SampleID
+
+info <- info %>% separate(SampleID, c("SampleID", "temp"), sep = "_S")
+
+ps <- phyloseq(otu_table(seqtab, taxa_are_rows=FALSE), sample_data(info), tax_table(taxa))
+ps
+
+asv_names <- vector(dim(otu_table(ps))[2], mode = "character")
+for (i in 1:dim(otu_table(ps))[2]){
+	asv_names[i] <- paste("ASV", i, sep = "_")
+}
+taxa_names(ps) <- asv_names
+colnames(otu_table(ps)) <- asv_names
+rownames(tax_table(ps)) <- asv_names
+
+prevdf <- apply(X = otu_table(ps), MARGIN = ifelse(taxa_are_rows(ps), yes = 1, no = 2), FUN = function(x){sum(x > 0)})
+prevdf <- data.frame(prevalence = prevdf, total_abundance = taxa_sums(ps), tax_table(ps))
+
+prevalence_threshold <- 2.5
+count_threshold <- 10*prevalence_threshold
+
+keeptaxa <- rownames(prevdf)[(prevdf$prevalence > prevalence_threshold) & (prevdf$total_abundance > count_threshold)]
+
+psf <- prune_taxa(keeptaxa, ps)
+
+rel <- transform_sample_counts(ps, function(x) x / sum(x))
+
+relf <- transform_sample_counts(psf, function(x) x / sum(x))
 ```
 
 # Alpha Diversity
+
+One common way to summarize metagenome results is to report a value of alpha diversity. This concept comes from ecology and there are several ways to measure the diversity within a sample. 
+
+---
+
+### Exercise
+
+A - Read the R documentation for the phyloseq function `estimate_richness()`. 
+
+B - Create a data frame containing the results of the `estimate_richness()` function and the measures of alpha diveristy you are interested in. 
+
+C - Create a data frame containing the sample metadata and the measures of alpha diversity you are interested in. 
+
+D - 
+
+---
+
+```{r, echo = FALSE}
+alpha <- estimate_richness(ps)
+aa <- cbind(alpha, sample_data(ps))
+```
